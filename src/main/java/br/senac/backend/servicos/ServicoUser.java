@@ -12,17 +12,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import br.senac.backend.db.dao.DaoGame;
-import br.senac.backend.model.games.Game;
+import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.model.users.User;
 
-@Path("/games")
-public class ServicoGame {
 
+@Path("/user")
+public class ServicoUser {
+
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void inserirGames(Game game) {
+	public void inserirUser(User user) {
 		try {
-			DaoGame.inserir(game);
+			DaoUser.inserir(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -30,9 +32,9 @@ public class ServicoGame {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Game> listarGames() {
+	public List<User> listarUsers() {
 		try {
-			return DaoGame.listarGames();
+			return DaoUser.listar();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,9 +43,9 @@ public class ServicoGame {
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void atualizarGame(Game game) {
+	public void atualizarUser(User user) {
 		try {
-			DaoGame.update(game);
+			DaoUser.atualizar(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,9 +56,10 @@ public class ServicoGame {
 	@Path("/{id}")
 	public void removerGame(@PathParam("id") Integer id) {
 		try {
-			DaoGame.excluir(id);
+			DaoUser.excluir(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 }
