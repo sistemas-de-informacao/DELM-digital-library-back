@@ -2,6 +2,7 @@ package br.senac.backend.model.games;
 import java.util.Date;
 
 public class Game {
+	
 	private Integer id;
 	private String nome;
 	private Double preco;

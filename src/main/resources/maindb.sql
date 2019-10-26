@@ -1,4 +1,4 @@
-CREATE DATABASE pi;
+CREATE DATABASE delm;
 
 USE pi;
 
