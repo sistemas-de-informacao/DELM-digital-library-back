@@ -30,7 +30,7 @@ public class ConnectionUtils {
         
         //Só tenta abrir uma conexão se não existir ou estiver fechada            
         //Endereço de conexão com o banco de dados
-        String dbURL = "jdbc:mysql://localhost:3306/delm_digital_library_db";
+        String dbURL = "jdbc:mysql://localhost:3306/delm_digital_db";
         
         //Propriedades para armazenamento de usuário e senha
         Properties properties = new Properties();

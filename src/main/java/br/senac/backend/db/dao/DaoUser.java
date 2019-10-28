@@ -16,7 +16,7 @@ public class DaoUser {
 
 	public static void inserir(User user) throws SQLException, Exception {
 
-		String sql = "INSERT INTO delm_digital_library_db.tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USAURIO, DATA_CRIACAO_USUARIO) "
+		String sql = "INSERT INTO tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USUARIO, DATA_CRIACAO_USUARIO)"
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 
 		Connection connection = null;
@@ -33,9 +33,8 @@ public class DaoUser {
 			preparedStatement.setString(3, user.getEmail());
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
-			preparedStatement.setDate(6, (Date) user.getDataCriacao());
+			preparedStatement.setString(6, user.getDataCriacao());
 			preparedStatement.execute();
-			System.out.println("Cadastro concluído com sucesso");
 		} finally {
 
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
@@ -69,7 +68,7 @@ public class DaoUser {
 			preparedStatement.setString(3, user.getEmail());
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
-			preparedStatement.setDate(6, (Date) user.getDataCriacao());
+			preparedStatement.setString(6, user.getDataCriacao());
 			preparedStatement.execute();
 
 		} finally {
@@ -119,7 +118,7 @@ public class DaoUser {
 
 	public static List<User> listar() throws SQLException, Exception {
 
-		String sql = "SELECT * FROM delm_digital_library_db.tb_usuario";
+		String sql = "SELECT * FROM tb_usuario";
 
 		List<User> listaUser = null;
 
@@ -131,7 +130,6 @@ public class DaoUser {
 			connection = ConnectionUtils.getConnection();
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setBoolean(1, true);
 
 			result = preparedStatement.executeQuery();
 
@@ -148,7 +146,7 @@ public class DaoUser {
 				user.setEmail(result.getString("EMAIL_USUARIO"));
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
-				user.setDataCriacao(result.getDate("DATA_CRIACAO_USUARIO"));
+				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				listaUser.add(user);
 
 			}

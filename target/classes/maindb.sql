@@ -7,7 +7,7 @@ CREATE TABLE `tb_usuario` (
    `EMAIL_USUARIO` varchar(150) NOT NULL,
    `SENHA_USUARIO` varchar(70) NOT NULL,
    `SALDO_USUARIO` double DEFAULT NULL,
-   `DATA_CRIACAO_USUARIO` datetime NOT NULL,
+   `DATA_CRIACAO_USUARIO` varchar(20) NOT NULL,
    PRIMARY KEY (`ID_USUARIO`)
  );
 CREATE TABLE `tb_categoria` (

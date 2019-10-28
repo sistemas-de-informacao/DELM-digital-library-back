@@ -9,7 +9,7 @@ public class User {
     private String email;
     private String senha;
     private Double saldo;
-    private Date dataCriacao;
+    private String dataCriacao;
     
 	public Integer getId() {
 		return id;
@@ -58,12 +58,14 @@ public class User {
 	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
 	}
-	
-	public Date getDataCriacao() {
+
+	public String getDataCriacao() {
 		return dataCriacao;
 	}
-	
-	public void setDataCriacao(Date dataCriacao) {
+
+	public void setDataCriacao(String dataCriacao) {
 		this.dataCriacao = dataCriacao;
-	}   
+	}
+	
+	
 }
