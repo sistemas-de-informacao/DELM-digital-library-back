@@ -19,30 +19,22 @@ import com.sun.research.ws.wadl.HTTPMethods;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.model.users.User;
 
-
 @Path("/user")
 public class ServicoUser {
 
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response inserirUser(User user) {
 		try {
 			DaoUser.inserir(user);
-			return Response
-				      .status(Response.Status.OK)
-				      .entity("Usuário cadastrado com sucesso.")
-				      .build();
+			return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return Response
-			      .status(Response.Status.OK)
-			      .entity("Os dados fornecidos estão incorretos.")
-			      .build();
+
+		return Response.status(Response.Status.BAD_REQUEST).entity("Os dados fornecidos estão incorretos.").build();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> listarUsers() {
@@ -53,7 +45,7 @@ public class ServicoUser {
 		}
 		return null;
 	}
-	
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void atualizarUser(User user) {
@@ -63,16 +55,19 @@ public class ServicoUser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public void removerGame(@PathParam("id") Integer id) {
+	public Response removerUser(@PathParam("id") Integer id) {
 		try {
 			DaoUser.excluir(id);
+			return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir usuário selecionado")
+				.build();
 	}
-	
+
 }

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.model.games.Game;
 import br.senac.backend.model.users.User;
@@ -51,7 +53,7 @@ public class DaoUser {
 
 	public static void atualizar(User user) throws SQLException, Exception {
 
-		String sql = "UPDATE delm_digital_library_db.tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SENHA_USUARIO=?, SALDO_USAURIO=?, DATA_CRIACAO_USUARIO=?"
+		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SENHA_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?"
 				+ "WHERE (ID_USUARIO=?)";
 
 		Connection connection = null;
@@ -69,6 +71,7 @@ public class DaoUser {
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
 			preparedStatement.setString(6, user.getDataCriacao());
+			preparedStatement.setInt(7, user.getId());
 			preparedStatement.execute();
 
 		} finally {
@@ -87,7 +90,7 @@ public class DaoUser {
 
 	public static void excluir(Integer id) throws SQLException, Exception {
 
-		String sql = "DELETE FROM delm_digital_library_db.tb_usuario WHERE (ID_USUARIO=?)";
+		String sql = "DELETE FROM tb_usuario WHERE (ID_USUARIO=?)";
 
 		Connection connection = null;
 
@@ -101,6 +104,7 @@ public class DaoUser {
 
 			preparedStatement.setInt(1, id);
 			preparedStatement.execute();
+			
 
 		} finally {
 

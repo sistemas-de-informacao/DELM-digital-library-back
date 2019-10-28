@@ -1,5 +1,4 @@
 package br.senac.backend.model.users;
-import java.util.Date;
 
 public class User {
 
