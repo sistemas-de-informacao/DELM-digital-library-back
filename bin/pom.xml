@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.senac.backend</groupId>
-	<artifactId>base-back-end</artifactId>
+	<artifactId>delm-digital-library-back</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1</version>
-	<name>Base Back End Maven Webapp</name>
+	<name>delm-digital-library-back</name>
 	<url>http://maven.apache.org</url>
 
 	<dependencyManagement>
@@ -47,6 +47,6 @@
 	</properties>
 	
 	<build>
-		<finalName>base-back-end</finalName>
+		<finalName>delm-digital-library-back</finalName>
 	</build>
 </project>

@@ -15,7 +15,7 @@ public class DaoGame {
 
 	public static void inserir(Game game) throws SQLException, Exception {
 
-		String sql = "INSERT INTO delm_digital_library_db.tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
+		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 
 		Connection connection = null;
@@ -29,7 +29,7 @@ public class DaoGame {
 
 			preparedStatement.setString(1, game.getNome());
 			preparedStatement.setDouble(2, game.getPreco());
-			preparedStatement.setDate(3, (Date) game.getDataLancamento());
+			preparedStatement.setString(3, game.getDataLancamento());
 			preparedStatement.setString(4, game.getDesenvolvedor());
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
@@ -65,7 +65,7 @@ public class DaoGame {
 
 			preparedStatement.setString(1, game.getNome());
 			preparedStatement.setDouble(2, game.getPreco());
-			preparedStatement.setDate(3, (Date) game.getDataLancamento());
+			preparedStatement.setString(3, game.getDataLancamento());
 			preparedStatement.setString(4, game.getDesenvolvedor());
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
@@ -147,7 +147,119 @@ public class DaoGame {
 				game.setId(result.getInt("ID_JOGO"));
 				game.setNome(result.getString("NOME_JOGO"));
 				game.setPreco(result.getDouble("PRECO_JOGO"));
-				game.setDataLancamento(result.getDate("DATA_LANCAMENTO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+				listaGames.add(game);
+
+			}
+
+		} finally {
+
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+
+		}
+
+		return listaGames;
+
+	}
+	
+	public static List<Game> listarGamesByName(String nome_jogo) throws SQLException, Exception {
+
+		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ?";
+
+		List<Game> listaGames = null;
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, nome_jogo);
+
+			result = preparedStatement.executeQuery();
+
+			while (result.next()) {
+
+				if (listaGames == null) {
+					listaGames = new ArrayList<Game>();
+				}
+
+				Game game = new Game();
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+				listaGames.add(game);
+
+			}
+
+		} finally {
+
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+
+		}
+
+		return listaGames;
+
+	}
+	
+	public static List<Game> listarGamesByDesc(String descricao_jogo) throws SQLException, Exception {
+
+		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ?";
+
+		List<Game> listaGames = null;
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, descricao_jogo);
+
+			result = preparedStatement.executeQuery();
+
+			while (result.next()) {
+
+				if (listaGames == null) {
+					listaGames = new ArrayList<Game>();
+				}
+
+				Game game = new Game();
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
 				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
 				game.setDescricao(result.getString("DESCRICAO_JOGO"));
 				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));

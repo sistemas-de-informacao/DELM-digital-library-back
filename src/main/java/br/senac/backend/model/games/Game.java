@@ -1,12 +1,12 @@
 package br.senac.backend.model.games;
-import java.util.Date;
+
 
 public class Game {
 	
 	private Integer id;
 	private String nome;
 	private Double preco;
-	private Date dataLancamento;
+	private String dataLancamento;
 	private String desenvolvedor;
 	private String descricao;
 	private Integer idCategoria;
@@ -35,14 +35,6 @@ public class Game {
 		this.preco = preco;
 	}
 	
-	public Date getDataLancamento() {
-		return dataLancamento;
-	}
-	
-	public void setDataLancamento(Date dataLancamento) {
-		this.dataLancamento = dataLancamento;
-	}
-	
 	public String getDesenvolvedor() {
 		return desenvolvedor;
 	}
@@ -66,4 +58,13 @@ public class Game {
 	public void setIdCategoria(Integer idCategoria) {
 		this.idCategoria = idCategoria;
 	}
+
+	public String getDataLancamento() {
+		return dataLancamento;
+	}
+
+	public void setDataLancamento(String dataLancamento) {
+		this.dataLancamento = dataLancamento;
+	}
+	
 }
