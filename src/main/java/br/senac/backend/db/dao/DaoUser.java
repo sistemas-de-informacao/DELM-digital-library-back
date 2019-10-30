@@ -284,5 +284,51 @@ public class DaoUser {
 		return listaUser;
 
 	}
-	
+
+	public static List<User> findById(Integer id) throws SQLException, Exception {
+
+		String sql = "SELECT * FROM tb_usuario where ID_USUARIO = ?";
+
+		List<User> listaUser = null;
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			result = preparedStatement.executeQuery();
+
+			while (result.next()) {
+
+				if (listaUser == null) {
+					listaUser = new ArrayList<User>();
+				}
+
+				User user = new User();
+				user.setId(result.getInt("ID_USUARIO"));
+				user.setNome(result.getString("NICK_USUARIO"));
+				user.setNome(result.getString("NOME_USUARIO"));
+				user.setEmail(result.getString("EMAIL_USUARIO"));
+				user.setSenha(result.getString("SENHA_USUARIO"));
+				user.setSaldo(result.getDouble("SALDO_USUARIO"));
+				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				listaUser.add(user);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+		return listaUser;
+	}
 }

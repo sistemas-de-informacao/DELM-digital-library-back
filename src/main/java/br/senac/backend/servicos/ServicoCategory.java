@@ -12,21 +12,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import com.sun.research.ws.wadl.HTTPMethods;
-
-import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.db.dao.DaoCategory;
+import br.senac.backend.model.category.Category;
 import br.senac.backend.model.users.User;
 
-@Path("/user")
-public class ServicoUser {
+@Path("/categoria")
+public class ServicoCategory {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response inserirUser(User user) {
+	public Response inserirCategoria(Category category) {
 		try {
-			if (DaoUser.listarByNick(user.getNickname()).get(0).getNickname().equals(null) &&
+			if (DaoCategory.listarByNome(category.getNome_categoria()).get(0).equals(null) &&
 					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
 				DaoUser.inserir(user);
 				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
@@ -94,4 +92,5 @@ public class ServicoUser {
 				.build();
 	}
 
+	
 }

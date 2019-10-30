@@ -50,22 +50,35 @@ public class ServicoGame {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void atualizarGame(Game game) {
+	public Response atualizarGame(Game game) {
 		try {
+			if(DaoGame.listarGamesByName(game.getNome()).get(0).equals(null) &&
+					DaoGame.listarGamesByDesc(game.getDescricao()).get(0).equals(null)) {
 			DaoGame.update(game);
+			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
+			}else {
+				return Response.status(Response.Status.BAD_REQUEST).entity("Informações duplicadas, por favor revise-as").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public void removerGame(@PathParam("id") Integer id) {
+	public Response removerGame(@PathParam("id") Integer id) {
 		try {
-			DaoGame.excluir(id);
+			if(!DaoGame.findById(id).isEmpty()) {
+				DaoGame.excluir(id);
+				return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
+			}else {
+				return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possivel deletar jogo \n jogo não existe").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 }
