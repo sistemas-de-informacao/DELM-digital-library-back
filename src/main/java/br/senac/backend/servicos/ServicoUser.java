@@ -24,10 +24,12 @@ public class ServicoUser {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+
 	public Response inserirUser(User user) {
 		try {
 			if (DaoUser.listarByNick(user.getNickname()).get(0).getNickname().equals(null) &&
 					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
+				user.setSaldo(1000.0);
 				DaoUser.inserir(user);
 				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
 			}else {

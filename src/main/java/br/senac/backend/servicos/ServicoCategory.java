@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoCategory;
+import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.model.category.Category;
 import br.senac.backend.model.users.User;
 
@@ -24,9 +25,8 @@ public class ServicoCategory {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response inserirCategoria(Category category) {
 		try {
-			if (DaoCategory.listarByNome(category.getNome_categoria()).get(0).equals(null) &&
-					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
-				DaoUser.inserir(user);
+			if (DaoCategory.listarByNome(category.getNome_categoria()).get(0).equals(null)) {
+//				DaoUser.inserir(user);
 				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
 			}else {
 				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
