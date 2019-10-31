@@ -25,33 +25,33 @@ public class ServicoUser {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 
-	public Response inserirUser(User user) {
-		try {
-			if (DaoUser.listarByNick(user.getNickname()).get(0).getNickname().equals(null) &&
-					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
-				user.setSaldo(1000.0);
-				DaoUser.inserir(user);
-				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return Response.status(Response.Status.BAD_REQUEST).entity("Os dados fornecidos estão incorretos.").build();
+	public void inserirUser(User user) {
+		System.err.println(user.toString());
+//		try {
+//			if (DaoUser.listarByNick(user.getNickname()).get(0).getNickname().equals(null) &&
+//					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
+//				DaoUser.inserir(user);
+//				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
+//			}else {
+//				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return Response.status(Response.Status.BAD_REQUEST).entity("Os dados fornecidos estão incorretos.").build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> listarUsers() {
 		try {
-			if(!DaoUser.listar().isEmpty()) {
+			if (!DaoUser.listar().isEmpty()) {
 				return DaoUser.listar();
-			}else {
+			} else {
 				System.err.println("");
 			}
-			} catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -61,14 +61,15 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response atualizarUser(User user) {
 		try {
-			if(DaoUser.listarByEmail(user.getEmail()).get(0).equals(null) &&
-					DaoUser.listarByNick(user.getNickname()).get(0).equals(null)) {
+			if (DaoUser.listarByEmail(user.getEmail()).get(0).equals(null)
+					&& DaoUser.listarByNick(user.getNickname()).get(0).equals(null)) {
 				DaoUser.atualizar(user);
 				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
-					
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Informações já existentes na base de dados, favor revise-as").build();
-				
+
+			} else {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("Informações já existentes na base de dados, favor revise-as").build();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,13 +82,13 @@ public class ServicoUser {
 	@Path("/{id}")
 	public Response removerUser(@PathParam("id") Integer id) {
 		try {
-			if(!DaoUser.findById(id).isEmpty()) {
+			if (!DaoUser.findById(id).isEmpty()) {
 				DaoUser.excluir(id);
 				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
-				
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possivel deletar \n Usuário não existe.")
-						.build();
+
+			} else {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("Não foi possivel deletar \n Usuário não existe.").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
