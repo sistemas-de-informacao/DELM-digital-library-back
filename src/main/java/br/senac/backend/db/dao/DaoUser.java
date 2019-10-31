@@ -1,11 +1,12 @@
 package br.senac.backend.db.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -18,8 +19,8 @@ public class DaoUser {
 
 	public static void inserir(User user) throws SQLException, Exception {
 
-		String sql = "INSERT INTO tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USUARIO, DATA_CRIACAO_USUARIO)"
-				+ " VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USUARIO, DATA_CRIACAO_USUARIO, ENABLE_USUARIO)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -30,12 +31,16 @@ public class DaoUser {
 
 			preparedStatement = connection.prepareStatement(sql);
 
+			Date data = new Date();
+			SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+			
 			preparedStatement.setString(1, user.getNickname());
 			preparedStatement.setString(2, user.getNome());
 			preparedStatement.setString(3, user.getEmail());
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
-			preparedStatement.setString(6, user.getDataCriacao());
+			preparedStatement.setString(6, formatador.format(data).toString());
+			preparedStatement.setBoolean(7, true);
 			preparedStatement.execute();
 		} finally {
 
@@ -53,7 +58,7 @@ public class DaoUser {
 
 	public static void atualizar(User user) throws SQLException, Exception {
 
-		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SENHA_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?"
+		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SENHA_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?, ENABLE_USUARIO=?"
 				+ "WHERE (ID_USUARIO=?)";
 
 		Connection connection = null;
@@ -71,7 +76,8 @@ public class DaoUser {
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
 			preparedStatement.setString(6, user.getDataCriacao());
-			preparedStatement.setInt(7, user.getId());
+			preparedStatement.setBoolean(7, user.getEnable());
+			preparedStatement.setInt(8, user.getId());
 			preparedStatement.execute();
 
 		} finally {
@@ -151,6 +157,7 @@ public class DaoUser {
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
 				listaUser.add(user);
 
 			}
@@ -206,6 +213,7 @@ public class DaoUser {
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
 				listaUser.add(user);
 
 			}
@@ -261,6 +269,7 @@ public class DaoUser {
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
 				listaUser.add(user);
 
 			}
@@ -316,6 +325,7 @@ public class DaoUser {
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
 				listaUser.add(user);
 			}
 		} finally {

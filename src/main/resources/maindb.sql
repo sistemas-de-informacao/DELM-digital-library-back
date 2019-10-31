@@ -8,6 +8,7 @@ CREATE TABLE `tb_usuario` (
    `SENHA_USUARIO` varchar(70) NOT NULL,
    `SALDO_USUARIO` double DEFAULT NULL,
    `DATA_CRIACAO_USUARIO` varchar(20) NOT NULL,
+   `ENABLE_USUARIO` BIT(1) NOT NULL,
    PRIMARY KEY (`ID_USUARIO`)
  );
 CREATE TABLE `tb_categoria` (

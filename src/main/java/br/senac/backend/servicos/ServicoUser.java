@@ -27,13 +27,12 @@ public class ServicoUser {
 	public Response inserirUser(User user) {
 		System.err.println(user.toString());
 		try {
-//			if (DaoUser.listarByNick(user.getNickname()).get(0).getNickname().equals(null) &&
-//					DaoUser.listarByEmail(user.getEmail()).get(0).getEmail().equals(null)) {
+			if (DaoUser.listarByNick(user.getNickname()) == null && DaoUser.listarByEmail(user.getEmail()) == null) {
 			DaoUser.inserir(user);
 			return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
-//			}else {
-//				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
-//			}
+			}else {
+				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

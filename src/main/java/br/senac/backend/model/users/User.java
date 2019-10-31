@@ -9,6 +9,7 @@ public class User {
     private String senha;
     private Double saldo;
     private String dataCriacao;
+    private Boolean enable;
     
 	public Integer getId() {
 		return id;
@@ -64,6 +65,14 @@ public class User {
 
 	public void setDataCriacao(String dataCriacao) {
 		this.dataCriacao = dataCriacao;
+	}
+
+	public Boolean getEnable() {
+		return enable;
+	}
+
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override
