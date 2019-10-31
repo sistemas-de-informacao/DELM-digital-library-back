@@ -65,6 +65,11 @@ public class User {
 	public void setDataCriacao(String dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", nickname=" + nickname + ", nome=" + nome + ", email=" + email + ", senha=" + senha
+				+ ", saldo=" + saldo + ", dataCriacao=" + dataCriacao + "]";
+	}
 	
 }
