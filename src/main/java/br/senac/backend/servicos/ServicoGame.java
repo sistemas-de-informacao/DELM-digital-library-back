@@ -28,7 +28,7 @@ public class ServicoGame {
 				DaoGame.inserir(game);
 				return Response.status(Response.Status.OK).entity("Jogo cadastrado com sucesso.").build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Jogo já cadastrado.").build();
+				return Response.status(Response.Status.OK).entity("Jogo já cadastrado.").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,7 +56,7 @@ public class ServicoGame {
 				DaoGame.update(game);
 				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST)
+				return Response.status(Response.Status.OK)
 						.entity("Informações duplicadas, por favor revise-as").build();
 			}
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class ServicoGame {
 				DaoGame.excluir(id);
 				return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST)
+				return Response.status(Response.Status.OK)
 						.entity("Não foi possivel deletar jogo \n jogo não existe").build();
 			}
 		} catch (Exception e) {

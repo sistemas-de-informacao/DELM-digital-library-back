@@ -12,9 +12,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import com.sun.research.ws.wadl.HTTPMethods;
 
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.model.users.User;
@@ -29,10 +26,10 @@ public class ServicoUser {
 		System.err.println(user.toString());
 		try {
 			if (DaoUser.listarByNick(user.getNickname()) == null && DaoUser.listarByEmail(user.getEmail()) == null) {
-			DaoUser.inserir(user);
-			return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Usuário já existe").build();
+				DaoUser.inserir(user);
+				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
+			} else {
+				return Response.status(Response.Status.OK).entity("Usuário já existe").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,7 +63,7 @@ public class ServicoUser {
 				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST)
+				return Response.status(Response.Status.OK)
 						.entity("Informações já existentes na base de dados, favor revise-as").build();
 
 			}
@@ -86,7 +83,7 @@ public class ServicoUser {
 				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
 
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST)
+				return Response.status(Response.Status.OK)
 						.entity("Não foi possivel deletar \n Usuário não existe.").build();
 			}
 		} catch (Exception e) {
