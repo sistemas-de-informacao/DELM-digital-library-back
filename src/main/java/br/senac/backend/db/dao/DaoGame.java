@@ -51,7 +51,7 @@ public class DaoGame {
 
 	public static void update(Game game) throws SQLException, Exception {
 
-		String sql = "UPDATE delm_digital_library_db.tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
+		String sql = "UPDATE tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
 				+ "WHERE (ID_JOGO=?)";
 
 		Connection connection = null;
@@ -90,7 +90,7 @@ public class DaoGame {
 
 	public static void excluir(Integer id) throws SQLException, Exception {
 
-		String sql = "UPDATE delm_digital_library_db.tb_jogo WHERE (ID_JOGO=?)";
+		String sql = "UPDATE tb_jogo WHERE (ID_JOGO=?)";
 
 		Connection connection = null;
 
@@ -120,7 +120,7 @@ public class DaoGame {
 
 	public static List<Game> listarGames() throws SQLException, Exception {
 
-		String sql = "SELECT * FROM delm_digital_library_db.tb_jogo";
+		String sql = "SELECT * FROM tb_jogo";
 
 		List<Game> listaGames = null;
 

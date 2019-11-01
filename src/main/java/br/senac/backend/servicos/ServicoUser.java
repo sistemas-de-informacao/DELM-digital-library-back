@@ -57,8 +57,7 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response atualizarUser(User user) {
 		try {
-			if (DaoUser.listarByEmail(user.getEmail()).get(0).equals(null)
-					&& DaoUser.listarByNick(user.getNickname()).get(0).equals(null)) {
+			if (DaoUser.listarByEmail(user.getEmail()) == null && DaoUser.listarByNick(user.getNickname()) == null) {
 				DaoUser.atualizar(user);
 				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 

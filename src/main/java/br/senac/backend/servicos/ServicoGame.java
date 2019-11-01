@@ -51,13 +51,13 @@ public class ServicoGame {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response atualizarGame(Game game) {
 		try {
-			if (DaoGame.listarGamesByName(game.getNome()).get(0).equals(null)
-					&& DaoGame.listarGamesByDesc(game.getDescricao()).get(0).equals(null)) {
+			if (DaoGame.listarGamesByName(game.getNome()) == null
+					&& DaoGame.listarGamesByDesc(game.getDescricao()) == null) {
 				DaoGame.update(game);
 				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 			} else {
-				return Response.status(Response.Status.OK)
-						.entity("Informações duplicadas, por favor revise-as").build();
+				return Response.status(Response.Status.OK).entity("Informações duplicadas, por favor revise-as")
+						.build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,8 +74,8 @@ public class ServicoGame {
 				DaoGame.excluir(id);
 				return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 			} else {
-				return Response.status(Response.Status.OK)
-						.entity("Não foi possivel deletar jogo \n jogo não existe").build();
+				return Response.status(Response.Status.OK).entity("Não foi possivel deletar jogo \n jogo não existe")
+						.build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
