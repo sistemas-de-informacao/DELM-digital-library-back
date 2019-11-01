@@ -24,6 +24,7 @@ public class ServicoUser {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response inserirUser(User user) {
 		System.err.println(user.toString());
 		try {
