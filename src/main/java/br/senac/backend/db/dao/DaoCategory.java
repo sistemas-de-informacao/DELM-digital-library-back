@@ -200,11 +200,9 @@ public class DaoCategory {
 
 		try {
 			connection = ConnectionUtils.getConnection();
-
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			result = preparedStatement.executeQuery();
-
 			if (result != null && result.next()) {
 				category.setId(result.getInt("ID_CATEGORIA"));
 				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
