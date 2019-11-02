@@ -14,97 +14,80 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoGame;
-import br.senac.backend.db.dao.DaoUser;
-import br.senac.backend.dto.loginDTO;
 import br.senac.backend.model.games.Game;
-import br.senac.backend.model.users.User;
 
 @Path("/games")
 public class ServicoGame {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response inserirGames(Game game) {
-		
-		System.err.println(game.toString());
+	public Response addGames(Game game) {
 		try {
-//			if (DaoGame.listarGamesByName(game.getNome()) == null
-//					&& DaoGame.listarGamesByDesc(game.getDescricao()) == null) {
-				DaoGame.inserir(game);
-				return Response.status(Response.Status.OK).entity("Jogo cadastrado com sucesso.").build();
-//			} else {
-//				return Response.status(Response.Status.OK).entity("Jogo já cadastrado.").build();
-//			}
+			DaoGame.inserir(game);
+			return Response.status(Response.Status.OK)
+					.entity("Jogo cadastrado com sucesso. \n" + "Jogo cadastrado: " + game.getNome()).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK)
+					.entity("Erro ao cadastrar jogo." + "Erro identificado em 'addGame': " + e.getMessage()).build();
 		}
-		return null;
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Game> listarGames() {
+	public List<Game> listGames() {
 		try {
 			return DaoGame.listarGames();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Erro identificado em 'listGame': " + e.getMessage());
 		}
 		return null;
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response atualizarGame(Game game) {
+	public Response updateGame(Game game) {
 		try {
-			if (DaoGame.listarGamesByName(game.getNome()) == null
-					&& DaoGame.listarGamesByDesc(game.getDescricao()) == null) {
-				DaoGame.update(game);
-				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
-			} else {
-				return Response.status(Response.Status.OK).entity("Informações duplicadas, por favor revise-as")
-						.build();
-			}
+			DaoGame.update(game);
+			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK).entity("Não foi possível atualizar as informações \n"
+					+ "Erro identificado em 'updateGame': " + e.getMessage()).build();
+
 		}
-		
-		return null;
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response removerGame(@PathParam("id") Integer id) {
+	public Response removeGame(@PathParam("id") Integer id) {
 		try {
-			if (!DaoGame.findById(id).equals(null)) {
-				DaoGame.excluir(id);
-				return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
-			} else {
-				return Response.status(Response.Status.OK).entity("Não foi possivel deletar jogo \n jogo não existe")
-						.build();
-			}
+			DaoGame.excluir(id);
+			return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK).entity("Não foi possível excluir jogo. \n"
+			+ "Erro identificado em 'removeGame': " + e.getMessage()).build();
+
 		}
-		return null;
 	}
-	
+
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "{id}")
-	public Game getGamById(@PathParam("id") Integer id) {
+	public Game findById(@PathParam("id") Integer id) {
 		try {
-		Game jogo = DaoGame.findById(id);
-		if(jogo == null) {
-			return null;
-		}else {
-			return jogo;
-		}
-		}catch (Exception e) {
-			System.out.println("Deu ruim no servico de game");
+			if (DaoGame.findById(id) == null) {
+				System.out.println("Não foi encontrado nenhum jogo com esse id.");
+				return null;
+			} else {
+				System.out.println("Jogo encontrado: " + DaoGame.findById(id).getNome());
+				return DaoGame.findById(id);
+			}
+		} catch (Exception e) {
+			System.out.println("Não foi possível executar 'findById' em Game. \n"
+					+ "Erro identificado: " + e.getMessage());
 		}
 		return null;
-		
+
 	}
 }

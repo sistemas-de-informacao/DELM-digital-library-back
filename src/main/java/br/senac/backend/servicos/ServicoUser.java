@@ -25,31 +25,22 @@ public class ServicoUser {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response inserirUser(User user) {
-		System.err.println(user.toString());
+	public Response addUser(User user) {
 		try {
-//			if (DaoUser.listarByNick(user.getNickname()) == null && DaoUser.listarByEmail(user.getEmail()) == null) {
-//				DaoUser.inserir(user);
-				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
-//			} else {
-//				return Response.status(Response.Status.OK).entity("Usuário já existe").build();
-//			}
+			DaoUser.inserir(user);
+			return Response.status(Response.Status.OK)
+					.entity("Usuário cadastrado com sucesso. \n" + "Usuário cadastrado: " + user.getNickname()).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK)
+					.entity("Erro ao cadastrar usuário." + "Erro identificado em 'addUser': " + e.getMessage()).build();
 		}
-
-		return Response.status(Response.Status.BAD_REQUEST).entity("Os dados fornecidos estão incorretos.").build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> listarUsers() {
+	public List<User> listUsers() {
 		try {
-			if (!DaoUser.listar().isEmpty()) {
-				return DaoUser.listar();
-			} else {
-				System.err.println("");
-			}
+			return DaoUser.listar();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,41 +49,31 @@ public class ServicoUser {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response atualizarUser(User user) {
+	public Response updateUser(User user) {
 		try {
-			// if (DaoUser.listarByEmail(user.getEmail()) == null &&
-			// DaoUser.listarByNick(user.getNickname()) == null) {
 			DaoUser.atualizar(user);
-			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
-
-			// } else {
-//				return Response.status(Response.Status.OK)
-//						.entity("Informações já existentes na base de dados, favor revise-as").build();
-
+			return Response.status(Response.Status.OK)
+					.entity("Informações de: " + user.getNome() + " foram atualizadas com sucesso.").build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK)
+					.entity("Erro ao atualizar usuário. \n" + "Erro identificado em 'updateUser': " + e.getMessage())
+					.build();
 		}
-		return null;
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response removerUser(@PathParam("id") Integer id) {
+	public Response removeUser(@PathParam("id") Integer id) {
 		try {
-			if (!DaoUser.findById(id).equals(null)) {
-				DaoUser.excluir(id);
-				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
+			DaoUser.excluir(id);
+			return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
 
-			} else {
-				return Response.status(Response.Status.OK).entity("Não foi possivel deletar \n Usuário não existe.")
-						.build();
-			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			return Response.status(Response.Status.OK)
+					.entity("Erro ao deletar usuário. \n" + "Erro identificado em 'removeUser': " + e.getMessage())
+					.build();
 		}
-		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir usuário selecionado")
-				.build();
 	}
 
 	@POST
@@ -101,35 +82,38 @@ public class ServicoUser {
 	@Path(value = "/login")
 	public User loginAccount(loginDTO login) {
 		try {
-			User nick = DaoUser.listarByNick(login.getUser());
-			if (nick == null) {
-				return null;
+			User usuarioLogin = DaoUser.listarByNick(login.getUser());
+			if (login.getUser() == usuarioLogin.getNickname()) {
+				if (login.getSenha() == usuarioLogin.getSenha()) {
+					return usuarioLogin;
+				} else {
+					System.out.println("Senha está incorreta. \n" + "Verifique os dados inseridos.");
+				}
 			} else {
-				System.out.println(nick);
-				return nick;
+				System.out.println("Usuario não existe em nossa base de dados \n" + "Verifique os dados inseridos.");
 			}
 		} catch (Exception e) {
-			System.out.println("Deu ruim no servico");
+			System.err.println("Erro ao efetuar login \n" + "Erro identificado: " + e.getMessage());
 		}
 		return null;
-
 	}
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "{id}")
-	public User getUserById(@PathParam("id") Integer id) {
+	public User findById(@PathParam("id") Integer id) {
 		try {
-			User usuario = DaoUser.findById(id);
-			if (usuario == null) {
+			if (DaoUser.findById(id) == null) {
+				System.out.println("Não foi encontrado nenhum usuário com esse id.");
 				return null;
 			} else {
-				System.out.println(usuario);
-				return usuario;
+				System.out.println("Usuário encontrado: " + DaoUser.findById(id).getNome());
+				return DaoUser.findById(id);
 			}
 		} catch (Exception e) {
-			System.out.println("Deu ruim no servico de usuario");
+			System.out.println(
+					"Não foi possível executar 'findById' em User. \n" + "Erro identificado: " + e.getMessage());
 		}
 		return null;
 
