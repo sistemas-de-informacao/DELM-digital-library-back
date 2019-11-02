@@ -34,7 +34,6 @@ public class DaoGame {
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.execute();
-			System.out.println("Cadastro concluído com sucesso");
 		} finally {
 
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
@@ -286,8 +285,6 @@ public class DaoGame {
 	public static Game findById(Integer id) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ?";
-		System.out.println(id);
-		// List<Game> listaGames = null;
 		Game game = new Game();
 
 		Connection connection = null;

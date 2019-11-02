@@ -314,7 +314,6 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				// listaUser.add(user);
 			} else {
 				System.out.println("Deu ruim na hora de buscar o usuario pelo ID");
 			}
