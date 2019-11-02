@@ -33,7 +33,7 @@ public class DaoUser {
 
 			Date data = new Date();
 			SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-			
+
 			preparedStatement.setString(1, user.getNickname());
 			preparedStatement.setString(2, user.getNome());
 			preparedStatement.setString(3, user.getEmail());
@@ -58,7 +58,7 @@ public class DaoUser {
 
 	public static void atualizar(User user) throws SQLException, Exception {
 
-		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SENHA_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?, ENABLE_USUARIO=?"
+		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?, ENABLE_USUARIO=? "
 				+ "WHERE (ID_USUARIO=?)";
 
 		Connection connection = null;
@@ -73,11 +73,10 @@ public class DaoUser {
 			preparedStatement.setString(1, user.getNickname());
 			preparedStatement.setString(2, user.getNome());
 			preparedStatement.setString(3, user.getEmail());
-			preparedStatement.setString(4, user.getSenha());
-			preparedStatement.setDouble(5, user.getSaldo());
-			preparedStatement.setString(6, user.getDataCriacao());
-			preparedStatement.setBoolean(7, user.getEnable());
-			preparedStatement.setInt(8, user.getId());
+			preparedStatement.setDouble(4, user.getSaldo());
+			preparedStatement.setString(5, user.getDataCriacao());
+			preparedStatement.setBoolean(6, user.getEnable());
+			preparedStatement.setInt(7, user.getId());
 			preparedStatement.execute();
 
 		} finally {
@@ -110,7 +109,6 @@ public class DaoUser {
 
 			preparedStatement.setInt(1, id);
 			preparedStatement.execute();
-			
 
 		} finally {
 
@@ -151,7 +149,7 @@ public class DaoUser {
 
 				User user = new User();
 				user.setId(result.getInt("ID_USUARIO"));
-				user.setNome(result.getString("NICK_USUARIO"));
+				user.setNickname(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
 				user.setEmail(result.getString("EMAIL_USUARIO"));
 				user.setSenha(result.getString("SENHA_USUARIO"));
@@ -182,11 +180,12 @@ public class DaoUser {
 
 	}
 
-	public static List<User> listarByNick(String nick_user) throws SQLException, Exception {
+	public static User listarByNick(String nick_user) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_usuario where NICK_USUARIO = ?";
 
-		List<User> listaUser = null;
+		// List<User> listaUser = null;
+		User user = new User();
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -198,26 +197,21 @@ public class DaoUser {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, nick_user);
 			result = preparedStatement.executeQuery();
-
-			while (result.next()) {
-
-				if (listaUser == null) {
-					listaUser = new ArrayList<User>();
-				}
-
-				User user = new User();
+			if (result != null && result.next()) {
 				user.setId(result.getInt("ID_USUARIO"));
-				user.setNome(result.getString("NICK_USUARIO"));
+				user.setNickname(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
 				user.setEmail(result.getString("EMAIL_USUARIO"));
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				listaUser.add(user);
-
+				System.out.println("Loguei");
+			} else {
+				System.out.println("user errado parsa");
 			}
-
+		} catch (Exception e) {
+			System.out.println("Deu ruim no login: " + e);
 		} finally {
 
 			if (result != null && !result.isClosed()) {
@@ -234,7 +228,7 @@ public class DaoUser {
 
 		}
 
-		return listaUser;
+		return user;
 
 	}
 
@@ -294,12 +288,13 @@ public class DaoUser {
 
 	}
 
-	public static List<User> findById(Integer id) throws SQLException, Exception {
+	public static User findById(Integer id) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_usuario where ID_USUARIO = ?";
 
-		List<User> listaUser = null;
+		// List<User> listaUser = null;
 
+		User user = new User();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -310,24 +305,21 @@ public class DaoUser {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			result = preparedStatement.executeQuery();
-
-			while (result.next()) {
-
-				if (listaUser == null) {
-					listaUser = new ArrayList<User>();
-				}
-
-				User user = new User();
+			if (result != null && result.next()) {
 				user.setId(result.getInt("ID_USUARIO"));
-				user.setNome(result.getString("NICK_USUARIO"));
+				user.setNickname(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
 				user.setEmail(result.getString("EMAIL_USUARIO"));
 				user.setSenha(result.getString("SENHA_USUARIO"));
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				listaUser.add(user);
+				// listaUser.add(user);
+			} else {
+				System.out.println("Deu ruim na hora de buscar o usuario pelo ID");
 			}
+		} catch (Exception e) {
+			System.out.println("Deu ruim na hora de buscar o usuario pelo ID ERRO => " + e);
 		} finally {
 			if (result != null && !result.isClosed()) {
 				result.close();
@@ -339,6 +331,6 @@ public class DaoUser {
 				connection.close();
 			}
 		}
-		return listaUser;
+		return user;
 	}
 }

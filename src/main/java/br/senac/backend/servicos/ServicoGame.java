@@ -14,7 +14,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoGame;
+import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.dto.loginDTO;
 import br.senac.backend.model.games.Game;
+import br.senac.backend.model.users.User;
 
 @Path("/games")
 public class ServicoGame {
@@ -22,14 +25,16 @@ public class ServicoGame {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response inserirGames(Game game) {
+		
+		System.err.println(game.toString());
 		try {
-			if (DaoGame.listarGamesByName(game.getNome()) == null
-					&& DaoGame.listarGamesByDesc(game.getDescricao()) == null) {
+//			if (DaoGame.listarGamesByName(game.getNome()) == null
+//					&& DaoGame.listarGamesByDesc(game.getDescricao()) == null) {
 				DaoGame.inserir(game);
 				return Response.status(Response.Status.OK).entity("Jogo cadastrado com sucesso.").build();
-			} else {
-				return Response.status(Response.Status.OK).entity("Jogo já cadastrado.").build();
-			}
+//			} else {
+//				return Response.status(Response.Status.OK).entity("Jogo já cadastrado.").build();
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,6 +67,7 @@ public class ServicoGame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return null;
 	}
 
@@ -70,7 +76,7 @@ public class ServicoGame {
 	@Path("/{id}")
 	public Response removerGame(@PathParam("id") Integer id) {
 		try {
-			if (!DaoGame.findById(id).isEmpty()) {
+			if (!DaoGame.findById(id).equals(null)) {
 				DaoGame.excluir(id);
 				return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 			} else {
@@ -81,5 +87,24 @@ public class ServicoGame {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "{id}")
+	public Game getGamById(@PathParam("id") Integer id) {
+		try {
+		Game jogo = DaoGame.findById(id);
+		if(jogo == null) {
+			return null;
+		}else {
+			return jogo;
+		}
+		}catch (Exception e) {
+			System.out.println("Deu ruim no servico de game");
+		}
+		return null;
+		
 	}
 }

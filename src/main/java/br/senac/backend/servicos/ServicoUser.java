@@ -13,7 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.dto.loginDTO;
+import br.senac.backend.model.games.Game;
 import br.senac.backend.model.users.User;
 
 @Path("/user")
@@ -25,12 +28,12 @@ public class ServicoUser {
 	public Response inserirUser(User user) {
 		System.err.println(user.toString());
 		try {
-			if (DaoUser.listarByNick(user.getNickname()) == null && DaoUser.listarByEmail(user.getEmail()) == null) {
-				DaoUser.inserir(user);
+//			if (DaoUser.listarByNick(user.getNickname()) == null && DaoUser.listarByEmail(user.getEmail()) == null) {
+//				DaoUser.inserir(user);
 				return Response.status(Response.Status.OK).entity("Usuário cadastrado com sucesso.").build();
-			} else {
-				return Response.status(Response.Status.OK).entity("Usuário já existe").build();
-			}
+//			} else {
+//				return Response.status(Response.Status.OK).entity("Usuário já existe").build();
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,15 +60,15 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response atualizarUser(User user) {
 		try {
-			if (DaoUser.listarByEmail(user.getEmail()) == null && DaoUser.listarByNick(user.getNickname()) == null) {
-				DaoUser.atualizar(user);
-				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
+			// if (DaoUser.listarByEmail(user.getEmail()) == null &&
+			// DaoUser.listarByNick(user.getNickname()) == null) {
+			DaoUser.atualizar(user);
+			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
 
-			} else {
-				return Response.status(Response.Status.OK)
-						.entity("Informações já existentes na base de dados, favor revise-as").build();
+			// } else {
+//				return Response.status(Response.Status.OK)
+//						.entity("Informações já existentes na base de dados, favor revise-as").build();
 
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,19 +80,59 @@ public class ServicoUser {
 	@Path("/{id}")
 	public Response removerUser(@PathParam("id") Integer id) {
 		try {
-			if (!DaoUser.findById(id).isEmpty()) {
+			if (!DaoUser.findById(id).equals(null)) {
 				DaoUser.excluir(id);
 				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
 
 			} else {
-				return Response.status(Response.Status.OK)
-						.entity("Não foi possivel deletar \n Usuário não existe.").build();
+				return Response.status(Response.Status.OK).entity("Não foi possivel deletar \n Usuário não existe.")
+						.build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir usuário selecionado")
 				.build();
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "/login")
+	public User loginAccount(loginDTO login) {
+		try {
+			User nick = DaoUser.listarByNick(login.getUser());
+			if (nick == null) {
+				return null;
+			} else {
+				System.out.println(nick);
+				return nick;
+			}
+		} catch (Exception e) {
+			System.out.println("Deu ruim no servico");
+		}
+		return null;
+
+	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "{id}")
+	public User getUserById(@PathParam("id") Integer id) {
+		try {
+			User usuario = DaoUser.findById(id);
+			if (usuario == null) {
+				return null;
+			} else {
+				System.out.println(usuario);
+				return usuario;
+			}
+		} catch (Exception e) {
+			System.out.println("Deu ruim no servico de usuario");
+		}
+		return null;
+
 	}
 
 }

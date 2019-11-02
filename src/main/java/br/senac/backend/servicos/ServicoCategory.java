@@ -53,44 +53,44 @@ public class ServicoCategory {
 		return null;
 	}
 
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response atualizarUser(User user) {
-		try {
-			if(DaoUser.listarByEmail(user.getEmail()).get(0).equals(null) &&
-					DaoUser.listarByNick(user.getNickname()).get(0).equals(null)) {
-				DaoUser.atualizar(user);
-				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
-					
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Informações já existentes na base de dados, favor revise-as").build();
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	@PUT
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response atualizarUser(User user) {
+//		try {
+////			if(DaoUser.listarByEmail(user.getEmail()).get(0).equals(null) &&
+////					DaoUser.listarByNick(user.getNickname()).get(0).equals(null)) {
+//				DaoUser.atualizar(user);
+////				return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
+////					
+////			}else {
+////				return Response.status(Response.Status.BAD_REQUEST).entity("Informações já existentes na base de dados, favor revise-as").build();
+//				
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
-	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("/{id}")
-	public Response removerUser(@PathParam("id") Integer id) {
-		try {
-			if(!DaoUser.findById(id).isEmpty()) {
-				DaoUser.excluir(id);
-				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
-				
-			}else {
-				return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possivel deletar \n Usuário não existe.")
-						.build();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir usuário selecionado")
-				.build();
-	}
+//	@DELETE
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Path("/{id}")
+//	public Response removerUser(@PathParam("id") Integer id) {
+//		try {
+//			if(!DaoUser.findById(id).isEmpty()) {
+//				DaoUser.excluir(id);
+//				return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
+//				
+//			}else {
+//				return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possivel deletar \n Usuário não existe.")
+//						.build();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir usuário selecionado")
+//				.build();
+//	}
 
 	
 }

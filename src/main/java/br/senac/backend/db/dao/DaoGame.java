@@ -70,8 +70,6 @@ public class DaoGame {
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.setInt(7, game.getId());
 
-			
-
 			preparedStatement.execute();
 
 		} finally {
@@ -100,9 +98,9 @@ public class DaoGame {
 
 			connection = ConnectionUtils.getConnection();
 
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			preparedStatement.execute();
 
 		} finally {
 
@@ -132,7 +130,6 @@ public class DaoGame {
 			connection = ConnectionUtils.getConnection();
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setBoolean(1, true);
 
 			result = preparedStatement.executeQuery();
 
@@ -173,7 +170,7 @@ public class DaoGame {
 		return listaGames;
 
 	}
-	
+
 	public static List<Game> listarGamesByName(String nome_jogo) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ?";
@@ -229,7 +226,7 @@ public class DaoGame {
 		return listaGames;
 
 	}
-	
+
 	public static List<Game> listarGamesByDesc(String descricao_jogo) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ?";
@@ -285,12 +282,13 @@ public class DaoGame {
 		return listaGames;
 
 	}
-	
-	public static List<Game> findById(Integer id) throws SQLException, Exception {
+
+	public static Game findById(Integer id) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ?";
-
-		List<Game> listaGames = null;
+		System.out.println(id);
+		// List<Game> listaGames = null;
+		Game game = new Game();
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -304,13 +302,8 @@ public class DaoGame {
 
 			result = preparedStatement.executeQuery();
 
-			while (result.next()) {
+			if (result != null && result.next()) {
 
-				if (listaGames == null) {
-					listaGames = new ArrayList<Game>();
-				}
-
-				Game game = new Game();
 				game.setId(result.getInt("ID_JOGO"));
 				game.setNome(result.getString("NOME_JOGO"));
 				game.setPreco(result.getDouble("PRECO_JOGO"));
@@ -318,9 +311,10 @@ public class DaoGame {
 				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
 				game.setDescricao(result.getString("DESCRICAO_JOGO"));
 				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
-				listaGames.add(game);
-
+				System.out.println("Peguei o game");
 			}
+		} catch (Exception e) {
+			System.out.println("Deu ruim pegar o game: " + e);
 
 		} finally {
 
@@ -338,9 +332,8 @@ public class DaoGame {
 
 		}
 
-		return listaGames;
+		return game;
 
 	}
-	
-	
+
 }
