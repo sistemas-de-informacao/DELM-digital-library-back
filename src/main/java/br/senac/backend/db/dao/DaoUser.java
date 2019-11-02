@@ -196,7 +196,9 @@ public class DaoUser {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, nick_user);
 			result = preparedStatement.executeQuery();
+			
 			if (result != null && result.next()) {
+				
 				user.setId(result.getInt("ID_USUARIO"));
 				user.setNickname(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
@@ -205,12 +207,11 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				System.out.println("Loguei");
-			} else {
-				System.out.println("user errado parsa");
+				
 			}
 		} catch (Exception e) {
-			System.out.println("Deu ruim no login: " + e);
+			System.out.println("Erro ao executar query de busca para login \n"
+					+ "Erro: " + e.getMessage());
 		} finally {
 
 			if (result != null && !result.isClosed()) {

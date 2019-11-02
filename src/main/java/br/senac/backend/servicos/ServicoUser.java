@@ -83,8 +83,8 @@ public class ServicoUser {
 	public User loginAccount(loginDTO login) {
 		try {
 			User usuarioLogin = DaoUser.listarByNick(login.getUser());
-			if (login.getUser() == usuarioLogin.getNickname()) {
-				if (login.getSenha() == usuarioLogin.getSenha()) {
+			if (login.getUser().trim().equals(usuarioLogin.getNickname())) {
+				if (login.getSenha().trim().equals(usuarioLogin.getSenha())) {
 					return usuarioLogin;
 				} else {
 					System.out.println("Senha está incorreta. \n" + "Verifique os dados inseridos.");
