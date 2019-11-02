@@ -13,22 +13,15 @@ import br.senac.backend.model.users.User;
 
 public class DaoCategory {
 
-	public static void inserir(Category category) throws SQLException, Exception {
+	public static void insertCategory(Category category) throws SQLException, Exception {
 
-		String sql = "INSERT INTO tb_categoria (NOME_CATEGORIA)"
-				+ " VALUES (?)";
-
+		String sql = "INSERT INTO tb_categoria (NOME_CATEGORIA)" + " VALUES (?)";
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
 		try {
-
 			connection = ConnectionUtils.getConnection();
-
 			preparedStatement = connection.prepareStatement(sql);
-
 			preparedStatement.setString(1, category.getNome_categoria());
-		
 			preparedStatement.execute();
 		} finally {
 
@@ -44,7 +37,7 @@ public class DaoCategory {
 
 	}
 
-	public static void atualizar(Category category) throws SQLException, Exception {
+	public static void updateCategory(Category category) throws SQLException, Exception {
 
 		String sql = "UPDATE tb_categoria SET NOME_CATEGORIA=? WHERE (ID_CATEGORIA=?)";
 
@@ -75,7 +68,7 @@ public class DaoCategory {
 
 	}
 
-	public static void excluir(Integer id) throws SQLException, Exception {
+	public static void deleteCategory(Integer id) throws SQLException, Exception {
 
 		String sql = "DELETE FROM tb_categoria WHERE (ID_CATEGORIA=?)";
 
@@ -91,7 +84,6 @@ public class DaoCategory {
 
 			preparedStatement.setInt(1, id);
 			preparedStatement.execute();
-			
 
 		} finally {
 
@@ -107,7 +99,7 @@ public class DaoCategory {
 
 	}
 
-	public static List<Category> listar() throws SQLException, Exception {
+	public static List<Category> listCategory() throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_categoria";
 
@@ -157,12 +149,11 @@ public class DaoCategory {
 
 	}
 
-	public static List<Category> listarByNome(String category_name) throws SQLException, Exception {
+	public static Category listCategoryByName(String category_name) throws SQLException, Exception {
 
-		String sql = "SELECT * FROM tb_categoria";
+		String sql = "SELECT * FROM tb_categoria where NOME_CATEGORIA = ?";
 
-		List<Category> listaCategory = null;
-
+		Category category = new Category();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -174,19 +165,10 @@ public class DaoCategory {
 			preparedStatement.setString(1, category_name);
 			result = preparedStatement.executeQuery();
 
-			while (result.next()) {
-
-				if (listaCategory == null) {
-					listaCategory = new ArrayList<Category>();
-				}
-
-				Category category = new Category();
+			if (result != null && result.next()) {
 				category.setId(result.getInt("ID_CATEGORIA"));
 				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
-				listaCategory.add(category);
-
 			}
-
 		} finally {
 
 			if (result != null && !result.isClosed()) {
@@ -203,16 +185,15 @@ public class DaoCategory {
 
 		}
 
-		return listaCategory;
+		return category;
 
 	}
 
-	public static List<Category> findById(Integer id) throws SQLException, Exception {
+	public static Category findById(Integer id) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_categoria where ID_CATEGORIA = ?";
 
-		List<Category> listaCategory = null;
-
+		Category category = new Category();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -224,16 +205,9 @@ public class DaoCategory {
 			preparedStatement.setInt(1, id);
 			result = preparedStatement.executeQuery();
 
-			while (result.next()) {
-
-				if (listaCategory == null) {
-					listaCategory = new ArrayList<Category>();
-				}
-
-				Category category = new Category();
+			if (result != null && result.next()) {
 				category.setId(result.getInt("ID_CATEGORIA"));
 				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
-				listaCategory.add(category);
 			}
 		} finally {
 			if (result != null && !result.isClosed()) {
@@ -246,6 +220,6 @@ public class DaoCategory {
 				connection.close();
 			}
 		}
-		return listaCategory;
+		return category;
 	}
 }

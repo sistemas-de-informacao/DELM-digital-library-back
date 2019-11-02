@@ -12,7 +12,6 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.utils.ConnectionUtils;
-import br.senac.backend.model.games.Game;
 import br.senac.backend.model.users.User;
 
 public class DaoUser {
