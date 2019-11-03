@@ -26,6 +26,7 @@ public class ServicoGame {
 			DaoGame.inserir(game);
 			return Response.status(Response.Status.OK)
 					.entity("Jogo cadastrado com sucesso. \n" + "Jogo cadastrado: " + game.getNome()).build();
+
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
 					.entity("Erro ao cadastrar jogo." + "Erro identificado em 'addGame': " + e.getMessage()).build();
@@ -63,8 +64,9 @@ public class ServicoGame {
 			DaoGame.excluir(id);
 			return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK).entity("Não foi possível excluir jogo. \n"
-			+ "Erro identificado em 'removeGame': " + e.getMessage()).build();
+			return Response.status(Response.Status.OK).entity(
+					"Não foi possível excluir jogo. \n" + "Erro identificado em 'removeGame': " + e.getMessage())
+					.build();
 
 		}
 	}
@@ -83,8 +85,8 @@ public class ServicoGame {
 				return DaoGame.findById(id);
 			}
 		} catch (Exception e) {
-			System.out.println("Não foi possível executar 'findById' em Game. \n"
-					+ "Erro identificado: " + e.getMessage());
+			System.out.println(
+					"Não foi possível executar 'findById' em Game. \n" + "Erro identificado: " + e.getMessage());
 		}
 		return null;
 

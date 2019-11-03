@@ -88,9 +88,51 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateUser(User user) {
 		try {
-			DaoUser.atualizar(user);
-			return Response.status(Response.Status.OK)
-					.entity("Informações de: " + user.getNome() + " foram atualizadas com sucesso.").build();
+			if (user.getNickname().toString().length() > 5 && user.getNickname().toString().length() < 30) {
+				if (user.getNome().toString().length() > 5 && user.getNome().toString().length() < 90) {
+					if (user.getEmail().contains("@")) {
+						if (user.getSenha().toString().length() > 6 && user.getSenha().toString().length() < 20) {
+							if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname())
+									.getNickname()) {
+								if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
+									if (user.getSaldo() == null) {
+										user.setSaldo(0.0);
+										DaoUser.atualizar(user);
+										return Response.status(Response.Status.OK).entity(
+												"Informações de: " + user.getNome() + " foram atualizadas com sucesso.")
+												.build();
+									} else {
+										DaoUser.atualizar(user);
+										return Response.status(Response.Status.OK).entity(
+												"Informações de: " + user.getNome() + " foram atualizadas com sucesso.")
+												.build();
+									}
+
+								} else {
+									return Response.status(Response.Status.OK)
+											.entity("Ja existe um usuario com esse email na nossa base de dados.")
+											.build();
+								}
+							} else {
+								return Response.status(Response.Status.OK)
+										.entity("Ja existe um usuário com esse nick na nossa base de dados.").build();
+							}
+						} else {
+							return Response.status(Response.Status.OK)
+									.entity("Senha deve ser maior que 5 caracteres e menor que 50.").build();
+						}
+					} else {
+						return Response.status(Response.Status.OK).entity("Por favor, Insira um email v�lido").build();
+					}
+				} else {
+					return Response.status(Response.Status.OK)
+							.entity("O nome deve ser maior que 5 caracteres e menor que 90 caracteres.").build();
+				}
+			} else {
+				return Response.status(Response.Status.OK)
+						.entity("O nome de usu�rio deve ser maior que 5 caracteres e menor que 30 caracteres.").build();
+			}
+
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
 					.entity("Erro ao atualizar usuário. \n" + "Erro identificado em 'updateUser': " + e.getMessage())
@@ -105,7 +147,6 @@ public class ServicoUser {
 		try {
 			DaoUser.excluir(id);
 			return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
-
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
 					.entity("Erro ao deletar usuário. \n" + "Erro identificado em 'removeUser': " + e.getMessage())
