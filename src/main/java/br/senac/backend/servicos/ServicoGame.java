@@ -52,7 +52,6 @@ public class ServicoGame {
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK).entity("Não foi possível atualizar as informações \n"
 					+ "Erro identificado em 'updateGame': " + e.getMessage()).build();
-
 		}
 	}
 

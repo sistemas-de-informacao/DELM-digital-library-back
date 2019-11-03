@@ -125,7 +125,7 @@ public class DaoUser {
 
 	public static List<User> listar() throws SQLException, Exception {
 
-		String sql = "SELECT * FROM tb_usuario";
+		String sql = "SELECT * FROM tb_usuario WHERE (ENABLE_USUARIO)=1";
 
 		List<User> listaUser = null;
 
