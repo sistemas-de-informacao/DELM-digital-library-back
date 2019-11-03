@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.dto.loginDTO;
-import br.senac.backend.model.games.Game;
 import br.senac.backend.model.users.User;
 
 @Path("/user")
@@ -27,12 +26,50 @@ public class ServicoUser {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUser(User user) {
 		try {
-			DaoUser.inserir(user);
-			return Response.status(Response.Status.OK)
-					.entity("Usuário cadastrado com sucesso. \n" + "Usuário cadastrado: " + user.getNickname()).build();
+			if (user.getNickname().toString().length() > 5 && user.getNickname().toString().length() < 30) {
+				if (user.getNome().toString().length() > 5 && user.getNome().toString().length() < 90) {
+					if (user.getEmail().contains("@")) {
+						if (user.getSenha().toString().length() > 6 && user.getSenha().toString().length() < 20) {
+							if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname())
+									.getNickname()) {
+								if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
+									if (user.getSaldo() == null) {
+										user.setSaldo(0.0);
+										DaoUser.inserir(user);
+										return Response.status(Response.Status.OK).entity(user).build();
+									} else {
+										DaoUser.inserir(user);
+										return Response.status(Response.Status.OK).entity(user).build();
+									}
+
+								} else {
+									return Response.status(Response.Status.OK)
+											.entity("Ja existe um usuario com esse email na nossa base de dados.")
+											.build();
+								}
+							} else {
+								return Response.status(Response.Status.OK)
+										.entity("Ja existe um usuÃ¡rio com esse nick na nossa base de dados.").build();
+							}
+						} else {
+							return Response.status(Response.Status.OK)
+									.entity("Senha deve ser maior que 5 caracteres e menor que 50.").build();
+						}
+					} else {
+						return Response.status(Response.Status.OK).entity("Por favor, Insira um email vï¿½lido").build();
+					}
+				} else {
+					return Response.status(Response.Status.OK)
+							.entity("O nome deve ser maior que 5 caracteres e menor que 90 caracteres.").build();
+				}
+			} else {
+				return Response.status(Response.Status.OK)
+						.entity("O nome de usuï¿½rio deve ser maior que 5 caracteres e menor que 30 caracteres.").build();
+			}
+
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
-					.entity("Erro ao cadastrar usuário." + "Erro identificado em 'addUser': " + e.getMessage()).build();
+					.entity("Erro ao cadastrar usuÃ¡rio." + "Erro identificado em 'addUser': " + e.getMessage()).build();
 		}
 	}
 
@@ -53,10 +90,10 @@ public class ServicoUser {
 		try {
 			DaoUser.atualizar(user);
 			return Response.status(Response.Status.OK)
-					.entity("Informações de: " + user.getNome() + " foram atualizadas com sucesso.").build();
+					.entity("InformaÃ§Ãµes de: " + user.getNome() + " foram atualizadas com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
-					.entity("Erro ao atualizar usuário. \n" + "Erro identificado em 'updateUser': " + e.getMessage())
+					.entity("Erro ao atualizar usuÃ¡rio. \n" + "Erro identificado em 'updateUser': " + e.getMessage())
 					.build();
 		}
 	}
@@ -67,11 +104,11 @@ public class ServicoUser {
 	public Response removeUser(@PathParam("id") Integer id) {
 		try {
 			DaoUser.excluir(id);
-			return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
+			return Response.status(Response.Status.OK).entity("UsuÃ¡rio deletado com sucesso.").build();
 
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK)
-					.entity("Erro ao deletar usuário. \n" + "Erro identificado em 'removeUser': " + e.getMessage())
+					.entity("Erro ao deletar usuÃ¡rio. \n" + "Erro identificado em 'removeUser': " + e.getMessage())
 					.build();
 		}
 	}
@@ -87,10 +124,10 @@ public class ServicoUser {
 				if (login.getSenha().trim().equals(usuarioLogin.getSenha())) {
 					return usuarioLogin;
 				} else {
-					System.out.println("Senha está incorreta. \n" + "Verifique os dados inseridos.");
+					System.out.println("Senha estÃ¡ incorreta. \n" + "Verifique os dados inseridos.");
 				}
 			} else {
-				System.out.println("Usuario não existe em nossa base de dados \n" + "Verifique os dados inseridos.");
+				System.out.println("Usuario nÃ£o existe em nossa base de dados \n" + "Verifique os dados inseridos.");
 			}
 		} catch (Exception e) {
 			System.err.println("Erro ao efetuar login \n" + "Erro identificado: " + e.getMessage());
@@ -105,15 +142,15 @@ public class ServicoUser {
 	public User findById(@PathParam("id") Integer id) {
 		try {
 			if (DaoUser.findById(id) == null) {
-				System.out.println("Não foi encontrado nenhum usuário com esse id.");
+				System.out.println("NÃ£o foi encontrado nenhum usuÃ¡rio com esse id.");
 				return null;
 			} else {
-				System.out.println("Usuário encontrado: " + DaoUser.findById(id).getNome());
+				System.out.println("UsuÃ¡rio encontrado: " + DaoUser.findById(id).getNome());
 				return DaoUser.findById(id);
 			}
 		} catch (Exception e) {
 			System.out.println(
-					"Não foi possível executar 'findById' em User. \n" + "Erro identificado: " + e.getMessage());
+					"NÃ£o foi possÃ­vel executar 'findById' em User. \n" + "Erro identificado: " + e.getMessage());
 		}
 		return null;
 

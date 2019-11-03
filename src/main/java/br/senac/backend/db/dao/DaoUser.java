@@ -196,9 +196,9 @@ public class DaoUser {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, nick_user);
 			result = preparedStatement.executeQuery();
-			
+
 			if (result != null && result.next()) {
-				
+
 				user.setId(result.getInt("ID_USUARIO"));
 				user.setNickname(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
@@ -207,11 +207,10 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				
+
 			}
 		} catch (Exception e) {
-			System.out.println("Erro ao executar query de busca para login \n"
-					+ "Erro: " + e.getMessage());
+			System.out.println("Erro ao executar query de busca para login \n" + "Erro: " + e.getMessage());
 		} finally {
 
 			if (result != null && !result.isClosed()) {
@@ -232,11 +231,11 @@ public class DaoUser {
 
 	}
 
-	public static List<User> listarByEmail(String email_user) throws SQLException, Exception {
+	public static User listarByEmail(String email_user) throws SQLException, Exception {
 
 		String sql = "SELECT * FROM tb_usuario where EMAIL_USUARIO = ?";
 
-		List<User> listaUser = null;
+		User user = new User();
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -249,13 +248,7 @@ public class DaoUser {
 			preparedStatement.setString(1, email_user);
 			result = preparedStatement.executeQuery();
 
-			while (result.next()) {
-
-				if (listaUser == null) {
-					listaUser = new ArrayList<User>();
-				}
-
-				User user = new User();
+			if (result != null && result.next()) {
 				user.setId(result.getInt("ID_USUARIO"));
 				user.setNome(result.getString("NICK_USUARIO"));
 				user.setNome(result.getString("NOME_USUARIO"));
@@ -264,8 +257,6 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				listaUser.add(user);
-
 			}
 
 		} finally {
@@ -284,7 +275,7 @@ public class DaoUser {
 
 		}
 
-		return listaUser;
+		return user;
 
 	}
 
