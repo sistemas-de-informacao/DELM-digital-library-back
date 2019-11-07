@@ -9,7 +9,6 @@ import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.model.category.Category;
-import br.senac.backend.model.users.User;
 
 public class DaoCategory {
 

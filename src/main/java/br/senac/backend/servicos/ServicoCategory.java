@@ -17,7 +17,6 @@ import br.senac.backend.db.dao.DaoCategory;
 import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.model.category.Category;
-import br.senac.backend.model.games.Game;
 import br.senac.backend.model.users.User;
 
 @Path("/categoria")
@@ -78,7 +77,7 @@ public class ServicoCategory {
 		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir categoria selecionada")
 				.build();
 	}
-	
+
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -93,8 +92,8 @@ public class ServicoCategory {
 				return DaoCategory.findById(id);
 			}
 		} catch (Exception e) {
-			System.out.println("Não foi possível executar 'findById' em Category. \n"
-					+ "Erro identificado: " + e.getMessage());
+			System.out.println(
+					"Não foi possível executar 'findById' em Category. \n" + "Erro identificado: " + e.getMessage());
 		}
 		return null;
 

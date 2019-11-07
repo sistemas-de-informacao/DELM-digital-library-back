@@ -13,10 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.dto.loginDTO;
 import br.senac.backend.model.users.User;
+import validators.UserValidator;
 
 @Path("/user")
 public class ServicoUser {
@@ -26,50 +26,33 @@ public class ServicoUser {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUser(User user) {
 		try {
-			if (user.getNickname().toString().length() > 5 && user.getNickname().toString().length() < 30) {
-				if (user.getNome().toString().length() > 5 && user.getNome().toString().length() < 90) {
-					if (user.getEmail().contains("@")) {
-						if (user.getSenha().toString().length() > 6 && user.getSenha().toString().length() < 20) {
-							if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname())
-									.getNickname()) {
-								if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
-									if (user.getSaldo() == null) {
-										user.setSaldo(0.0);
-										DaoUser.inserir(user);
-										return Response.status(Response.Status.OK).entity(user).build();
-									} else {
-										DaoUser.inserir(user);
-										return Response.status(Response.Status.OK).entity(user).build();
-									}
+			if (!UserValidator.validateUser(user).equals(null))
+				return UserValidator.validateUser(user);
 
-								} else {
-									return Response.status(Response.Status.OK)
-											.entity("Ja existe um usuario com esse email na nossa base de dados.")
-											.build();
-								}
-							} else {
-								return Response.status(Response.Status.OK)
-										.entity("Ja existe um usuário com esse nick na nossa base de dados.").build();
-							}
-						} else {
-							return Response.status(Response.Status.OK)
-									.entity("Senha deve ser maior que 5 caracteres e menor que 50.").build();
-						}
+			if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname()).getNickname()) {
+				if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
+					if (user.getSaldo() == null) {
+						user.setSaldo(0.0);
+						DaoUser.inserir(user);
+						return Response.status(Response.Status.OK).entity(user).build();
 					} else {
-						return Response.status(Response.Status.OK).entity("Por favor, Insira um email v�lido").build();
+						DaoUser.inserir(user);
+						return Response.status(Response.Status.OK).entity(user).build();
 					}
+
 				} else {
 					return Response.status(Response.Status.OK)
-							.entity("O nome deve ser maior que 5 caracteres e menor que 90 caracteres.").build();
+							.entity("J� existe um usu�rio com esse e-mail na nossa base de dados.").build();
 				}
 			} else {
 				return Response.status(Response.Status.OK)
-						.entity("O nome de usu�rio deve ser maior que 5 caracteres e menor que 30 caracteres.").build();
+						.entity("J� existe um usu�rio com esse nickname na nossa base de dados.").build();
 			}
-
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(Response.Status.OK)
-					.entity("Erro ao cadastrar usuário." + "Erro identificado em 'addUser': " + e.getMessage()).build();
+					.entity("Erro ao cadastrar usu�rio." + " Erro identificado em 'addUser': " + e.getMessage())
+					.build();
 		}
 	}
 
@@ -98,14 +81,12 @@ public class ServicoUser {
 									if (user.getSaldo() == null) {
 										user.setSaldo(0.0);
 										DaoUser.atualizar(user);
-										return Response.status(Response.Status.OK).entity(
-												"Informações de: " + user.getNome() + " foram atualizadas com sucesso.")
-												.build();
+										return Response.status(Response.Status.OK).entity("Informações de: "
+												+ user.getNome() + " foram atualizadas com sucesso.").build();
 									} else {
 										DaoUser.atualizar(user);
-										return Response.status(Response.Status.OK).entity(
-												"Informações de: " + user.getNome() + " foram atualizadas com sucesso.")
-												.build();
+										return Response.status(Response.Status.OK).entity("Informações de: "
+												+ user.getNome() + " foram atualizadas com sucesso.").build();
 									}
 
 								} else {
@@ -122,7 +103,8 @@ public class ServicoUser {
 									.entity("Senha deve ser maior que 5 caracteres e menor que 50.").build();
 						}
 					} else {
-						return Response.status(Response.Status.OK).entity("Por favor, Insira um email v�lido").build();
+						return Response.status(Response.Status.OK).entity("Por favor, Insira um email v�lido")
+								.build();
 					}
 				} else {
 					return Response.status(Response.Status.OK)
@@ -130,7 +112,8 @@ public class ServicoUser {
 				}
 			} else {
 				return Response.status(Response.Status.OK)
-						.entity("O nome de usu�rio deve ser maior que 5 caracteres e menor que 30 caracteres.").build();
+						.entity("O nome de usu�rio deve ser maior que 5 caracteres e menor que 30 caracteres.")
+						.build();
 			}
 
 		} catch (Exception e) {

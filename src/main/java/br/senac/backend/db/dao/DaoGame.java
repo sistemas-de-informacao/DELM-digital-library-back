@@ -1,7 +1,6 @@
 package br.senac.backend.db.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +52,7 @@ public class DaoGame {
 				+ " WHERE (ID_JOGO=?)";
 
 		System.err.println(game);
-		
+
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
