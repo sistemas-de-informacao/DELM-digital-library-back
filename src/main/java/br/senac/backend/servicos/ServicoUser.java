@@ -26,7 +26,7 @@ public class ServicoUser {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUser(User user) {
 		try {
-			if (!UserValidator.validateUser(user).equals(null))
+			if (UserValidator.validateUser(user) != null)
 				return UserValidator.validateUser(user);
 
 			if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname()).getNickname()) {
@@ -42,16 +42,16 @@ public class ServicoUser {
 
 				} else {
 					return Response.status(Response.Status.OK)
-							.entity("Já existe um usuário com esse e-mail na nossa base de dados.").build();
+							.entity("Jï¿½ existe um usuï¿½rio com esse e-mail na nossa base de dados.").build();
 				}
 			} else {
 				return Response.status(Response.Status.OK)
-						.entity("Já existe um usuário com esse nickname na nossa base de dados.").build();
+						.entity("Jï¿½ existe um usuï¿½rio com esse nickname na nossa base de dados.").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Response.Status.OK)
-					.entity("Erro ao cadastrar usuário." + " Erro identificado em 'addUser': " + e.getMessage())
+					.entity("Erro ao cadastrar usuï¿½rio." + " Erro identificado em 'addUser': " + e.getMessage())
 					.build();
 		}
 	}
