@@ -127,12 +127,12 @@ public class UserValidator {
 			User userByNickname = DaoUser.findByNickname(nickname);
 			if (userByNickname != null)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse nickname na nossa base de dados");
+						"Já existe um usuário com esse nickname");
 
 			User userByEmail = DaoUser.findByEmail(email);
 			if (userByEmail != null)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse e-mail na nossa base de dados");
+						"Já existe um usuário com esse e-mail");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Erro: " + e.getMessage());
@@ -150,14 +150,14 @@ public class UserValidator {
 			if (userByNickname != null) {
 				if (!id.equals(userByNickname.getId()))
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse nickname na nossa base de dados");
+						"Já existe um usuário com esse nickname");
 			}
 
 			User userByEmail = DaoUser.findByEmail(email);
 			if (userByEmail != null) {
 				if (!id.equals(userByEmail.getId())) 
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse e-mail na nossa base de dados");
+						"Já existe um usuário com esse e-mail");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

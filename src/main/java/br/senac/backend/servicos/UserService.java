@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.db.utils.ResponseUtils;
-import br.senac.backend.dto.loginDTO;
+import br.senac.backend.dto.LoginDTO;
 import br.senac.backend.models.User;
 import br.senac.backend.validators.UserValidator;
 
 @Path("/user")
-public class ServicoUser {
+public class UserService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "/login")
-	public Response loginAccount(loginDTO login) {
+	public Response loginAccount(LoginDTO login) {
 		try {
 			User usuario = DaoUser.findByNickname(login.getUser());
 			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname())) {

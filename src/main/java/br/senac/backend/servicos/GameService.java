@@ -14,22 +14,28 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoGame;
+import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Game;
+import br.senac.backend.validators.GameValidator;
 
-@Path("/games")
-public class ServicoGame {
+@Path("/game")
+public class GameService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addGames(Game game) {
 		try {
-			DaoGame.inserir(game);
-			return Response.status(Response.Status.OK)
-					.entity("Jogo cadastrado com sucesso. \n" + "Jogo cadastrado: " + game.getNome()).build();
+			if (GameValidator.validateGame(game) != null)
+				return GameValidator.validateGame(game);
 
+			if (GameValidator.gameExists(game.getNome()) != null)
+				return GameValidator.gameExists(game.getNome());
+
+			DaoGame.inserir(game);
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Jogo cadastrado com sucesso", game);
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK)
-					.entity("Erro ao cadastrar jogo." + "Erro identificado em 'addGame': " + e.getMessage()).build();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao cadastrar jogo: " + e.getMessage());
 		}
 	}
 
@@ -48,11 +54,17 @@ public class ServicoGame {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateGame(Game game) {
 		try {
+			if (GameValidator.validateGame(game) != null)
+				return GameValidator.validateGame(game);
+
+			if (GameValidator.gameExistsToUpdate(game.getNome(), game.getId()) != null)
+				return GameValidator.gameExistsToUpdate(game.getNome(), game.getId());
+
 			DaoGame.update(game);
-			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Jogo atualizado com sucesso", game);
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK).entity("Não foi possível atualizar as informações \n"
-					+ "Erro identificado em 'updateGame': " + e.getMessage()).build();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao atualizar jogo: " + e.getMessage());
 		}
 	}
 
@@ -67,7 +79,6 @@ public class ServicoGame {
 			return Response.status(Response.Status.OK).entity(
 					"Não foi possível excluir jogo. \n" + "Erro identificado em 'removeGame': " + e.getMessage())
 					.build();
-
 		}
 	}
 
@@ -78,7 +89,6 @@ public class ServicoGame {
 	public Game findById(@PathParam("id") Integer id) {
 		try {
 			if (DaoGame.findById(id) == null) {
-				System.out.println("Não foi encontrado nenhum jogo com esse id.");
 				return null;
 			} else {
 				System.out.println("Jogo encontrado: " + DaoGame.findById(id).getNome());
@@ -88,7 +98,7 @@ public class ServicoGame {
 			System.out.println(
 					"Não foi possível executar 'findById' em Game. \n" + "Erro identificado: " + e.getMessage());
 		}
-		return null;
 
+		return null;
 	}
 }

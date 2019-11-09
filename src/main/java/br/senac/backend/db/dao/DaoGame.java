@@ -13,7 +13,6 @@ import br.senac.backend.models.Game;
 public class DaoGame {
 
 	public static void inserir(Game game) throws SQLException, Exception {
-
 		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -21,7 +20,6 @@ public class DaoGame {
 		PreparedStatement preparedStatement = null;
 
 		try {
-
 			connection = ConnectionUtils.getConnection();
 
 			preparedStatement = connection.prepareStatement(sql);
@@ -34,7 +32,6 @@ public class DaoGame {
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.execute();
 		} finally {
-
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();
 			}
@@ -42,9 +39,7 @@ public class DaoGame {
 			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
-
 		}
-
 	}
 
 	public static void update(Game game) throws SQLException, Exception {
@@ -144,27 +139,20 @@ public class DaoGame {
 		return listaGames;
 	}
 
-	public static List<Game> listarGamesByName(String nome_jogo) throws SQLException, Exception {
+	public static Game findByName(String nome) throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ?";
-
-		List<Game> listaGames = null;
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
 			connection = ConnectionUtils.getConnection();
-
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, nome_jogo);
-
+			preparedStatement.setString(1, nome);
 			result = preparedStatement.executeQuery();
-			while (result.next()) {
-				if (listaGames == null) {
-					listaGames = new ArrayList<Game>();
-				}
-
+			if (result != null && result.next()) {
 				Game game = new Game();
+
 				game.setId(result.getInt("ID_JOGO"));
 				game.setNome(result.getString("NOME_JOGO"));
 				game.setPreco(result.getDouble("PRECO_JOGO"));
@@ -172,7 +160,8 @@ public class DaoGame {
 				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
 				game.setDescricao(result.getString("DESCRICAO_JOGO"));
 				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
-				listaGames.add(game);
+
+				return game;
 			}
 		} finally {
 			if (result != null && !result.isClosed()) {
@@ -188,10 +177,10 @@ public class DaoGame {
 			}
 		}
 
-		return listaGames;
+		return null;
 	}
 
-	public static List<Game> listarGamesByDesc(String descricao_jogo) throws SQLException, Exception {
+	public static List<Game> findGamesByDesc(String descricao_jogo) throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ?";
 
 		List<Game> listaGames = null;
@@ -262,7 +251,6 @@ public class DaoGame {
 				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
 				game.setDescricao(result.getString("DESCRICAO_JOGO"));
 				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
-				System.out.println("Peguei o game");
 			}
 		} catch (Exception e) {
 			System.out.println("Deu ruim pegar o game: " + e);

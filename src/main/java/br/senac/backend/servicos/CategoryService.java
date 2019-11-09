@@ -20,7 +20,7 @@ import br.senac.backend.models.Category;
 import br.senac.backend.models.User;
 
 @Path("/categoria")
-public class ServicoCategory {
+public class CategoryService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
