@@ -1,4 +1,4 @@
-package br.senac.backend.model.games;
+package br.senac.backend.models;
 
 public class Game {
 

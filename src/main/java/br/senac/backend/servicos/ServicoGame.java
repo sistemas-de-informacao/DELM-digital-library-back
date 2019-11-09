@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoGame;
-import br.senac.backend.model.games.Game;
+import br.senac.backend.models.Game;
 
 @Path("/games")
 public class ServicoGame {

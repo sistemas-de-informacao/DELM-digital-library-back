@@ -14,9 +14,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.dto.loginDTO;
-import br.senac.backend.model.users.User;
-import validators.UserValidator;
+import br.senac.backend.models.User;
+import br.senac.backend.validators.UserValidator;
 
 @Path("/user")
 public class ServicoUser {
@@ -29,30 +30,18 @@ public class ServicoUser {
 			if (UserValidator.validateUser(user) != null)
 				return UserValidator.validateUser(user);
 
-			if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname()).getNickname()) {
-				if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
-					if (user.getSaldo() == null) {
-						user.setSaldo(0.0);
-						DaoUser.inserir(user);
-						return Response.status(Response.Status.OK).entity(user).build();
-					} else {
-						DaoUser.inserir(user);
-						return Response.status(Response.Status.OK).entity(user).build();
-					}
+			if (UserValidator.validateUser(user) != null)
+				return UserValidator.validateUser(user);
 
-				} else {
-					return Response.status(Response.Status.OK)
-							.entity("J� existe um usu�rio com esse e-mail na nossa base de dados.").build();
-				}
-			} else {
-				return Response.status(Response.Status.OK)
-						.entity("J� existe um usu�rio com esse nickname na nossa base de dados.").build();
-			}
+			if (UserValidator.userExists(user.getNickname(), user.getEmail()) != null)
+				return UserValidator.userExists(user.getNickname(), user.getEmail());
+
+			DaoUser.inserir(user);
+			return ResponseUtils.successReturnBody(Response.Status.CREATED, "Usuário criado com sucesso", user);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(Response.Status.OK)
-					.entity("Erro ao cadastrar usu�rio." + " Erro identificado em 'addUser': " + e.getMessage())
-					.build();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao cadastrar usuário: " + e.getMessage());
 		}
 	}
 
@@ -71,55 +60,17 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateUser(User user) {
 		try {
-			if (user.getNickname().toString().length() > 5 && user.getNickname().toString().length() < 30) {
-				if (user.getNome().toString().length() > 5 && user.getNome().toString().length() < 90) {
-					if (user.getEmail().contains("@")) {
-						if (user.getSenha().toString().length() > 6 && user.getSenha().toString().length() < 20) {
-							if (user.getNickname().toString() != DaoUser.listarByNick(user.getNickname())
-									.getNickname()) {
-								if (user.getEmail() != DaoUser.listarByEmail(user.getEmail()).getEmail()) {
-									if (user.getSaldo() == null) {
-										user.setSaldo(0.0);
-										DaoUser.atualizar(user);
-										return Response.status(Response.Status.OK).entity("Informações de: "
-												+ user.getNome() + " foram atualizadas com sucesso.").build();
-									} else {
-										DaoUser.atualizar(user);
-										return Response.status(Response.Status.OK).entity("Informações de: "
-												+ user.getNome() + " foram atualizadas com sucesso.").build();
-									}
+			if (UserValidator.validateUser(user) != null)
+				return UserValidator.validateUser(user);
 
-								} else {
-									return Response.status(Response.Status.OK)
-											.entity("Ja existe um usuario com esse email na nossa base de dados.")
-											.build();
-								}
-							} else {
-								return Response.status(Response.Status.OK)
-										.entity("Ja existe um usuário com esse nick na nossa base de dados.").build();
-							}
-						} else {
-							return Response.status(Response.Status.OK)
-									.entity("Senha deve ser maior que 5 caracteres e menor que 50.").build();
-						}
-					} else {
-						return Response.status(Response.Status.OK).entity("Por favor, Insira um email v�lido")
-								.build();
-					}
-				} else {
-					return Response.status(Response.Status.OK)
-							.entity("O nome deve ser maior que 5 caracteres e menor que 90 caracteres.").build();
-				}
-			} else {
-				return Response.status(Response.Status.OK)
-						.entity("O nome de usu�rio deve ser maior que 5 caracteres e menor que 30 caracteres.")
-						.build();
-			}
+			if (UserValidator.userExistsToUpdate(user.getNickname(), user.getEmail(), user.getId()) != null)
+				return UserValidator.userExistsToUpdate(user.getNickname(), user.getEmail(), user.getId());
 
+			DaoUser.atualizar(user);
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário atualizado com sucesso", user);
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK)
-					.entity("Erro ao atualizar usuário. \n" + "Erro identificado em 'updateUser': " + e.getMessage())
-					.build();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao atualizar usuário: " + e.getMessage());
 		}
 	}
 
@@ -129,11 +80,10 @@ public class ServicoUser {
 	public Response removeUser(@PathParam("id") Integer id) {
 		try {
 			DaoUser.excluir(id);
-			return Response.status(Response.Status.OK).entity("Usuário deletado com sucesso.").build();
+			return ResponseUtils.successReturnString(Response.Status.OK, "Usuário deletado com sucesso");
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK)
-					.entity("Erro ao deletar usuário. \n" + "Erro identificado em 'removeUser': " + e.getMessage())
-					.build();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao deletar usuário: " + e.getMessage());
 		}
 	}
 
@@ -141,22 +91,24 @@ public class ServicoUser {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "/login")
-	public User loginAccount(loginDTO login) {
+	public Response loginAccount(loginDTO login) {
 		try {
-			User usuarioLogin = DaoUser.listarByNick(login.getUser());
-			if (login.getUser().trim().equals(usuarioLogin.getNickname())) {
-				if (login.getSenha().trim().equals(usuarioLogin.getSenha())) {
-					return usuarioLogin;
+			User usuario = DaoUser.findByNickname(login.getUser());
+			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname())) {
+				if (login.getSenha().trim().equalsIgnoreCase(usuario.getSenha())) {
+					return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário logado com sucesso.", usuario);
 				} else {
-					System.out.println("Senha está incorreta. \n" + "Verifique os dados inseridos.");
+					return ResponseUtils.successReturnString(Response.Status.OK,
+							"Senha está incorreta. Verifique os dados inseridos.");
 				}
 			} else {
-				System.out.println("Usuario não existe em nossa base de dados \n" + "Verifique os dados inseridos.");
+				return ResponseUtils.successReturnString(Response.Status.OK,
+						"Usuario não existe em nossa base de dados. Verifique os dados inseridos.");
 			}
 		} catch (Exception e) {
-			System.err.println("Erro ao efetuar login \n" + "Erro identificado: " + e.getMessage());
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao efetuar login: " + e.getMessage());
 		}
-		return null;
 	}
 
 	@GET

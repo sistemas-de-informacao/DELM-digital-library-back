@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
-import br.senac.backend.model.users.User;
+import br.senac.backend.models.User;
 
 public class DaoUser {
 
@@ -150,8 +150,8 @@ public class DaoUser {
 		return listaUser;
 	}
 
-	public static User listarByNick(String nick_user) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_usuario where NICK_USUARIO = ?";
+	public static User findByNickname(String nickname) throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_usuario where NICK_USUARIO LIKE ?";
 
 		User user = new User();
 
@@ -163,7 +163,7 @@ public class DaoUser {
 			connection = ConnectionUtils.getConnection();
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, nick_user);
+			preparedStatement.setString(1, nickname);
 			result = preparedStatement.executeQuery();
 
 			if (result != null && result.next()) {
@@ -175,6 +175,8 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+
+				return user;
 			}
 		} catch (Exception e) {
 			System.out.println("Erro ao executar query de busca para login \n" + "Erro: " + e.getMessage());
@@ -191,12 +193,12 @@ public class DaoUser {
 				connection.close();
 			}
 		}
-
-		return user;
+		
+		return null;
 	}
 
-	public static User listarByEmail(String email_user) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_usuario where EMAIL_USUARIO = ?";
+	public static User findByEmail(String email_user) throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_usuario where EMAIL_USUARIO like ?";
 
 		User user = new User();
 
@@ -219,6 +221,8 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+				
+				return user;
 			}
 		} finally {
 			if (result != null && !result.isClosed()) {
@@ -234,7 +238,7 @@ public class DaoUser {
 			}
 		}
 
-		return user;
+		return null;
 	}
 
 	public static User findById(Integer id) throws SQLException, Exception {

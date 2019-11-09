@@ -16,8 +16,8 @@ import javax.ws.rs.core.Response;
 import br.senac.backend.db.dao.DaoCategory;
 import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoUser;
-import br.senac.backend.model.category.Category;
-import br.senac.backend.model.users.User;
+import br.senac.backend.models.Category;
+import br.senac.backend.models.User;
 
 @Path("/categoria")
 public class ServicoCategory {

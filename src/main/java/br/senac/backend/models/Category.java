@@ -1,4 +1,4 @@
-package br.senac.backend.model.category;
+package br.senac.backend.models;
 
 public class Category {
 
