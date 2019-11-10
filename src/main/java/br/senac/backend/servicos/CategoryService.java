@@ -15,65 +15,77 @@ import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoCategory;
 import br.senac.backend.db.dao.DaoGame;
-import br.senac.backend.db.dao.DaoUser;
+import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Category;
-import br.senac.backend.models.User;
+import br.senac.backend.validators.CategoryValidator;
 
-@Path("/categoria")
+@Path("/category")
 public class CategoryService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response insertCategory(Category category) {
+	public Response insert(Category category) {
 		try {
-			DaoCategory.insertCategory(category);
-			return Response.status(Response.Status.OK).entity("Categoria cadastrada com sucesso.").build();
+			if (CategoryValidator.validateGame(category) != null)
+				return CategoryValidator.validateGame(category);
+
+			if (CategoryValidator.categoryExists(category.getNome()) != null)
+				return CategoryValidator.categoryExists(category.getNome());
+
+			DaoCategory.insert(category);
+			return ResponseUtils.successReturnBody(Response.Status.CREATED, "Categoria criada com sucesso", category);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao cadastrar categoria: " + e.getMessage());
 		}
-
-		return Response.status(Response.Status.OK).entity("Os dados fornecidos estão incorretos.").build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> listCategory() {
+	public List<Category> list() {
 		try {
-			if (!DaoCategory.listCategory().isEmpty()) {
-				return DaoUser.listar();
+			if (!DaoCategory.list().isEmpty()) {
+				return DaoCategory.list();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateCategory(Category category) {
+	public Response update(Category category) {
 		try {
+			if (CategoryValidator.validateGame(category) != null)
+				return CategoryValidator.validateGame(category);
 
-			DaoCategory.updateCategory(category);
-			return Response.status(Response.Status.OK).entity("Informações atualizadas com sucesso.").build();
-
+			if (CategoryValidator.categoryToUpdateExists(category.getNome(), category.getId()) != null)
+				return CategoryValidator.categoryToUpdateExists(category.getNome(), category.getId());
+			
+			DaoCategory.update(category);
+			return ResponseUtils.successReturnBody(Response.Status.CREATED, "Categoria atualizada com sucesso",
+					category);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao cadastrar categoria: " + e.getMessage());
 		}
-		return null;
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response removeCategory(@PathParam("id") Integer id) {
+	public Response delete(@PathParam("id") Integer id) {
 		try {
-
-			DaoCategory.deleteCategory(id);
+			DaoCategory.delete(id);
 			return Response.status(Response.Status.OK).entity("Categoria deletada com sucesso.").build();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return Response.status(Response.Status.BAD_REQUEST).entity("Não foi possível excluir categoria selecionada")
 				.build();
 	}
@@ -95,8 +107,8 @@ public class CategoryService {
 			System.out.println(
 					"Não foi possível executar 'findById' em Category. \n" + "Erro identificado: " + e.getMessage());
 		}
-		return null;
 
+		return null;
 	}
 
 }

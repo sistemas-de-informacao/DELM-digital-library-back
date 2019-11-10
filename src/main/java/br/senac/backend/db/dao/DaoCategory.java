@@ -12,7 +12,7 @@ import br.senac.backend.models.Category;
 
 public class DaoCategory {
 
-	public static void insertCategory(Category category) throws SQLException, Exception {
+	public static void insert(Category category) throws SQLException, Exception {
 		String sql = "INSERT INTO tb_categoria (NOME_CATEGORIA)" + " VALUES (?)";
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -20,10 +20,9 @@ public class DaoCategory {
 		try {
 			connection = ConnectionUtils.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, category.getNome_categoria());
+			preparedStatement.setString(1, category.getNome());
 			preparedStatement.execute();
 		} finally {
-
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();
 			}
@@ -34,7 +33,7 @@ public class DaoCategory {
 		}
 	}
 
-	public static void updateCategory(Category category) throws SQLException, Exception {
+	public static Category update(Category category) throws SQLException, Exception {
 		String sql = "UPDATE tb_categoria SET NOME_CATEGORIA=? WHERE (ID_CATEGORIA=?)";
 
 		Connection connection = null;
@@ -42,9 +41,9 @@ public class DaoCategory {
 		try {
 			connection = ConnectionUtils.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, category.getNome_categoria());
+			
+			preparedStatement.setString(1, category.getNome());
 			preparedStatement.setInt(2, category.getId());
-			preparedStatement.execute();
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();
@@ -54,9 +53,11 @@ public class DaoCategory {
 				connection.close();
 			}
 		}
+
+		return null;
 	}
 
-	public static void deleteCategory(Integer id) throws SQLException, Exception {
+	public static void delete(Integer id) throws SQLException, Exception {
 		String sql = "DELETE FROM tb_categoria WHERE (ID_CATEGORIA=?)";
 
 		Connection connection = null;
@@ -77,7 +78,7 @@ public class DaoCategory {
 		}
 	}
 
-	public static List<Category> listCategory() throws SQLException, Exception {
+	public static List<Category> list() throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_categoria";
 
 		List<Category> listaCategory = null;
@@ -95,7 +96,7 @@ public class DaoCategory {
 
 				Category category = new Category();
 				category.setId(result.getInt("ID_CATEGORIA"));
-				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
+				category.setNome(result.getString("NOME_CATEGORIA"));
 				listaCategory.add(category);
 			}
 		} finally {
@@ -130,7 +131,7 @@ public class DaoCategory {
 
 			if (result != null && result.next()) {
 				category.setId(result.getInt("ID_CATEGORIA"));
-				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
+				category.setNome(result.getString("NOME_CATEGORIA"));
 
 				return category;
 			}
@@ -166,7 +167,7 @@ public class DaoCategory {
 
 			if (result != null && result.next()) {
 				category.setId(result.getInt("ID_CATEGORIA"));
-				category.setNome_categoria(result.getString("NOME_CATEGORIA"));
+				category.setNome(result.getString("NOME_CATEGORIA"));
 
 				return category;
 			}

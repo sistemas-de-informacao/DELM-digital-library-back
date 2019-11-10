@@ -31,7 +31,7 @@ public class GameService {
 			if (GameValidator.gameExists(game.getNome()) != null)
 				return GameValidator.gameExists(game.getNome());
 
-			DaoGame.inserir(game);
+			DaoGame.insert(game);
 			return ResponseUtils.successReturnBody(Response.Status.OK, "Jogo cadastrado com sucesso", game);
 		} catch (Exception e) {
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
@@ -43,7 +43,7 @@ public class GameService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Game> listGames() {
 		try {
-			return DaoGame.listarGames();
+			return DaoGame.list();
 		} catch (Exception e) {
 			System.out.println("Erro identificado em 'listGame': " + e.getMessage());
 		}
@@ -73,7 +73,7 @@ public class GameService {
 	@Path("/{id}")
 	public Response removeGame(@PathParam("id") Integer id) {
 		try {
-			DaoGame.excluir(id);
+			DaoGame.delete(id);
 			return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.OK).entity(

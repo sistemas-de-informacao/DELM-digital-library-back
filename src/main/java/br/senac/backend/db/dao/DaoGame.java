@@ -12,7 +12,7 @@ import br.senac.backend.models.Game;
 
 public class DaoGame {
 
-	public static void inserir(Game game) throws SQLException, Exception {
+	public static void insert(Game game) throws SQLException, Exception {
 		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -46,8 +46,6 @@ public class DaoGame {
 		String sql = "UPDATE tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO_JOGO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
 				+ " WHERE (ID_JOGO=?)";
 
-		System.err.println(game);
-
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -74,7 +72,7 @@ public class DaoGame {
 		}
 	}
 
-	public static void excluir(Integer id) throws SQLException, Exception {
+	public static void delete(Integer id) throws SQLException, Exception {
 		String sql = "delete from tb_jogo WHERE (ID_JOGO=?)";
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -95,7 +93,7 @@ public class DaoGame {
 		}
 	}
 
-	public static List<Game> listarGames() throws SQLException, Exception {
+	public static List<Game> list() throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_jogo";
 		List<Game> listaGames = null;
 
