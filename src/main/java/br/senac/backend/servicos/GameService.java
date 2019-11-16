@@ -23,7 +23,7 @@ public class GameService {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addGames(Game game) {
+	public Response addGame(Game game) {
 		try {
 			if (GameValidator.validateGame(game) != null)
 				return GameValidator.validateGame(game);
@@ -76,8 +76,7 @@ public class GameService {
 			DaoGame.delete(id);
 			return Response.status(Response.Status.OK).entity("Jogo excluído com sucesso.").build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK).entity(
-					"Não foi possível excluir jogo. \n" + "Erro identificado em 'removeGame': " + e.getMessage())
+			return Response.status(Response.Status.OK).entity("Não foi possível excluir jogo: " + e.getMessage())
 					.build();
 		}
 	}
@@ -91,14 +90,30 @@ public class GameService {
 			if (DaoGame.findById(id) == null) {
 				return null;
 			} else {
-				System.out.println("Jogo encontrado: " + DaoGame.findById(id).getNome());
 				return DaoGame.findById(id);
 			}
 		} catch (Exception e) {
-			System.out.println(
-					"Não foi possível executar 'findById' em Game. \n" + "Erro identificado: " + e.getMessage());
+			Response.status(Response.Status.OK).entity("Não foi possível encontrar jogo: " + e.getMessage()).build();
 		}
 
 		return null;
 	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "pesquisar/{nome}")
+	public Response getAllByNome(@PathParam("nome") String nome) {
+		try {
+			if (DaoGame.findAllByName(nome) != null)
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Jogos encontrados com sucesso", DaoGame.findAllByName(nome));
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao pesquisar jogo: " + e.getMessage());
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+				"Jogo não encontrado" );
+	}
+
 }

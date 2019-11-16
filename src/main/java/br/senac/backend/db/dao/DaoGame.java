@@ -178,6 +178,55 @@ public class DaoGame {
 		return null;
 	}
 
+	public static List<Game> findAllByName(String nome) throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_jogo where NOME_JOGO LIKE ?";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		List<Game> listaGames = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, "%" + nome + "%");
+			result = preparedStatement.executeQuery();
+			System.out.println(result);
+			if (result != null && result.next()) {
+				if (listaGames == null) {
+					listaGames = new ArrayList<Game>();
+				}
+
+				Game game = new Game();
+
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+
+				listaGames.add(game);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return listaGames;
+	}
+
 	public static List<Game> findGamesByDesc(String descricao_jogo) throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ?";
 
