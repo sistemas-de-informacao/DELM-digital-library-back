@@ -285,5 +285,87 @@ public class DaoUser {
 
 		return user;
 	}
+	
+	public static List<User> findAllByNickname(String nickname) throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_usuario where NICK_USUARIO LIKE ? and ENABLE_USUARIO = 1";
 
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		List<User> listaUsuarios = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, "%" + nickname + "%");
+			result = preparedStatement.executeQuery();
+			System.out.println(result);
+			if (result != null && result.next()) {
+				if (listaUsuarios == null) {
+					listaUsuarios = new ArrayList<User>();
+				}
+				User user = new User();
+
+				user.setId(result.getInt("ID_USUARIO"));
+				user.setNickname(result.getString("NICK_USUARIO"));
+				user.setNome(result.getString("NOME_USUARIO"));
+				user.setEmail(result.getString("EMAIL_USUARIO"));
+				user.setSenha(result.getString("SENHA_USUARIO"));
+				user.setSaldo(result.getDouble("SALDO_USUARIO"));
+				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
+				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+
+				listaUsuarios.add(user);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return listaUsuarios;
+	}
+
+	public static String ativar(String nickname) throws SQLException, Exception {
+		String sql = "UPDATE tb_usuario SET ENABLE_USUARIO=1 "
+				+ "WHERE (NICK_USUARIO=?)";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, nickname);
+			preparedStatement.executeUpdate();
+			
+			return nickname;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}		
+	}
+	
 }

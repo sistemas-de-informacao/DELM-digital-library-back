@@ -96,6 +96,8 @@ public class UserService {
 			User usuario = DaoUser.findByNickname(login.getUser());
 			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname())) {
 				if (login.getSenha().trim().equalsIgnoreCase(usuario.getSenha())) {
+					if (usuario.getEnable().equals(false)) 
+						return ResponseUtils.successReturnString(Response.Status.OK, "Conta desativada");
 					return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário logado com sucesso.", usuario);
 				} else {
 					return ResponseUtils.successReturnString(Response.Status.OK,
@@ -128,8 +130,42 @@ public class UserService {
 			System.out.println(
 					"Não foi possível executar 'findById' em User. \n" + "Erro identificado: " + e.getMessage());
 		}
-		return null;
 
+		return null;
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "pesquisar/{nickname}")
+	public Response getAllByNome(@PathParam("nickname") String nickname) {
+		try {
+			if (DaoUser.findAllByNickname(nickname) != null)
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuários encontrados com sucesso", DaoUser.findAllByNickname(nickname));
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao pesquisar usuário: " + e.getMessage());
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+				"Usuário não encontrado" );
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "ativar/{nickname}")
+	public Response ativar(@PathParam("nickname") String nickname) {
+		try {
+			if (DaoUser.ativar(nickname) != null)
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário ativado com sucesso", DaoUser.ativar(nickname));
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao ativar usuário: " + e.getMessage());
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+				"Não foi possível ativar usuário" );
 	}
 
 }
