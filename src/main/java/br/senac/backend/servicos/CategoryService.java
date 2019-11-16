@@ -86,7 +86,7 @@ public class CategoryService {
 			e.printStackTrace();
 		}
 
-		return Response.status(Response.Status.BAD_REQUEST).entity("N„o foi possÌvel excluir categoria selecionada")
+		return Response.status(Response.Status.BAD_REQUEST).entity("N√£o foi poss√£vel excluir categoria selecionada")
 				.build();
 	}
 
@@ -97,7 +97,7 @@ public class CategoryService {
 	public Category findById(@PathParam("id") Integer id) {
 		try {
 			if (DaoCategory.findById(id) == null) {
-				System.out.println("N„o foi encontrado nenhuma categoria com esse id.");
+				System.out.println("N√£o foi encontrado nenhuma categoria com esse id.");
 				return null;
 			} else {
 				System.out.println("Jogo encontrado: " + DaoGame.findById(id).getNome());
@@ -105,10 +105,27 @@ public class CategoryService {
 			}
 		} catch (Exception e) {
 			System.out.println(
-					"N„o foi possÌvel executar 'findById' em Category. \n" + "Erro identificado: " + e.getMessage());
+					"N√£o foi poss√£vel executar 'findById' em Category. \n" + "Erro identificado: " + e.getMessage());
 		}
 
 		return null;
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "pesquisar/{nome}")
+	public Response getAllByNome(@PathParam("nome") String nome) {
+		try {
+			if (DaoCategory.findAllByName(nome) != null)
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Categorias encontradas com sucesso", DaoCategory.findAllByName(nome));
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao pesquisar categoria: " + e.getMessage());
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+				"Categoria n√£o encontrada" );
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.models.Category;
+import br.senac.backend.models.Game;
 
 public class DaoCategory {
 
@@ -41,7 +42,7 @@ public class DaoCategory {
 		try {
 			connection = ConnectionUtils.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			
+
 			preparedStatement.setString(1, category.getNome());
 			preparedStatement.setInt(2, category.getId());
 		} finally {
@@ -186,6 +187,48 @@ public class DaoCategory {
 		}
 
 		return null;
+	}
+
+	public static List<Category> findAllByName(String nome) throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_categoria where NOME_CATEGORIA LIKE ?";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		List<Category> listaCategory = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, "%" + nome + "%");
+			result = preparedStatement.executeQuery();
+			System.out.println(result);
+			if (result != null && result.next()) {
+				if (listaCategory == null) {
+					listaCategory = new ArrayList<Category>();
+				}
+				Category category = new Category();
+
+				category.setId(result.getInt("ID_CATEGORIA"));
+				category.setNome(result.getString("NOME_CATEGORIA"));
+				listaCategory.add(category);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return listaCategory;
 	}
 
 }

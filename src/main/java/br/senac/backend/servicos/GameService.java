@@ -74,9 +74,9 @@ public class GameService {
 	public Response removeGame(@PathParam("id") Integer id) {
 		try {
 			DaoGame.delete(id);
-			return Response.status(Response.Status.OK).entity("Jogo excluÌdo com sucesso.").build();
+			return Response.status(Response.Status.OK).entity("Jogo exclu√≠do com sucesso.").build();
 		} catch (Exception e) {
-			return Response.status(Response.Status.OK).entity("N„o foi possÌvel excluir jogo: " + e.getMessage())
+			return Response.status(Response.Status.OK).entity("N√£o foi poss√≠vel excluir jogo: " + e.getMessage())
 					.build();
 		}
 	}
@@ -93,7 +93,7 @@ public class GameService {
 				return DaoGame.findById(id);
 			}
 		} catch (Exception e) {
-			Response.status(Response.Status.OK).entity("N„o foi possÌvel encontrar jogo: " + e.getMessage()).build();
+			Response.status(Response.Status.OK).entity("N√£o foi poss√≠vel encontrar jogo: " + e.getMessage()).build();
 		}
 
 		return null;
@@ -113,7 +113,7 @@ public class GameService {
 		}
 
 		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
-				"Jogo n„o encontrado" );
+				"Jogo n√£o encontrado" );
 	}
 
 }
