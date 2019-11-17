@@ -4,19 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
+import br.senac.backend.models.Permissoes;
 import br.senac.backend.models.User;
 
 public class DaoUser {
 
 	public static void inserir(User user) throws SQLException, Exception {
-		String sql = "INSERT INTO tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USUARIO, DATA_CRIACAO_USUARIO, ENABLE_USUARIO)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tb_usuario (NICK_USUARIO, NOME_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, SALDO_USUARIO, DATA_CRIACAO_USUARIO, ENABLE_USUARIO, TIPO_CONTA_USUARIO)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -25,16 +24,14 @@ public class DaoUser {
 			connection = ConnectionUtils.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 
-			Date data = new Date();
-			SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-
 			preparedStatement.setString(1, user.getNickname());
 			preparedStatement.setString(2, user.getNome());
 			preparedStatement.setString(3, user.getEmail());
 			preparedStatement.setString(4, user.getSenha());
 			preparedStatement.setDouble(5, user.getSaldo());
-			preparedStatement.setString(6, formatador.format(data).toString());
+			preparedStatement.setString(6, user.getDataCriacao());
 			preparedStatement.setBoolean(7, true);
+			preparedStatement.setInt(8, user.getTipo().ordinal());
 			preparedStatement.execute();
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
@@ -48,7 +45,7 @@ public class DaoUser {
 	}
 
 	public static void atualizar(User user) throws SQLException, Exception {
-		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?, ENABLE_USUARIO=? "
+		String sql = "UPDATE tb_usuario SET NICK_USUARIO=?, NOME_USUARIO=?,EMAIL_USUARIO=?, SALDO_USUARIO=?, DATA_CRIACAO_USUARIO=?, ENABLE_USUARIO=?, TIPO_CONTA_USUARIO=? "
 				+ "WHERE (ID_USUARIO=?)";
 
 		Connection connection = null;
@@ -65,7 +62,8 @@ public class DaoUser {
 			preparedStatement.setDouble(4, user.getSaldo());
 			preparedStatement.setString(5, user.getDataCriacao());
 			preparedStatement.setBoolean(6, user.getEnable());
-			preparedStatement.setInt(7, user.getId());
+			preparedStatement.setInt(7, user.getTipo().ordinal());
+			preparedStatement.setInt(8, user.getId());
 			preparedStatement.execute();
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
@@ -175,6 +173,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+				user.setTipo(Permissoes.getPermissao(result.getInt("TIPO_CONTA_USUARIO")));
 
 				return user;
 			}
@@ -221,6 +220,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+				user.setTipo(Permissoes.getPermissao(result.getInt("ENABLE_USUARIO")));
 				
 				return user;
 			}
@@ -264,6 +264,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+				user.setTipo(Permissoes.getPermissao(result.getInt("ENABLE_USUARIO")));
 			} else {
 				System.out.println("Deu ruim na hora de buscar o usuario pelo ID");
 			}
@@ -315,6 +316,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
+				user.setTipo(Permissoes.getPermissao(result.getInt("ENABLE_USUARIO")));
 
 				listaUsuarios.add(user);
 			}
