@@ -45,6 +45,7 @@ public class DaoCategory {
 
 			preparedStatement.setString(1, category.getNome());
 			preparedStatement.setInt(2, category.getId());
+			preparedStatement.executeUpdate();
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();

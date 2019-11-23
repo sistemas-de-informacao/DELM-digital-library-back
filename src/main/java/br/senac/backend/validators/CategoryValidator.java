@@ -19,12 +19,12 @@ public class CategoryValidator {
 
 	public static Response validateName(String nome) {
 		if (nome.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome √© obrigat√°rio");
 
 		if (!nome.isEmpty()) {
 			if (nome.length() > 120)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"O campo nome sÛ pode ter no m·ximo 120 caracteres");
+						"O campo nome s√≥ pode ter no m√°ximo 120 caracteres");
 		}
 
 		return null;
@@ -34,7 +34,7 @@ public class CategoryValidator {
 		try {
 			Category categoria = DaoCategory.findByName(nome);
 			if (categoria != null)
-				return ResponseUtils.successReturnString(Response.Status.OK, "J· existe uma categoria com esse nome");
+				return ResponseUtils.successReturnString(Response.Status.OK, "J√° existe uma categoria com esse nome");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Erro: " + e.getMessage());
@@ -52,7 +52,7 @@ public class CategoryValidator {
 			if (categoria != null) {
 				if (!categoria.getId().equals(id))
 					return ResponseUtils.successReturnString(Response.Status.OK,
-							"J· existe uma categoria com esse nome");
+							"J√° existe uma categoria com esse nome");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -36,12 +36,12 @@ public class GameValidator {
 
 	public static Response validateName(String nome) {
 		if (nome.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome √© obrigat√°rio");
 
 		if (!nome.isEmpty()) {
 			if (nome.length() > 120)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"O campo nome sÛ pode ter no m·ximo 120 caracteres");
+						"O campo nome s√≥ pode ter no m√°ximo 120 caracteres");
 		}
 
 		return null;
@@ -49,54 +49,54 @@ public class GameValidator {
 
 	public static Response validatePreco(Double preco) {
 		if (preco.isNaN())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo preÁo precisa ser um n˙mero");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo pre√ßo precisa ser um n√∫mero");
 
 		if (preco < 0)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O preÁo preciso ser positivo");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O pre√ßo preciso ser positivo");
 
 		return null;
 	}
 
 	public static Response validateDate(String data) {
 		if (data.isEmpty() || data == null)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo data È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo data √© obrigat√°rio");
 
 		if (DateUtils.isValidDate(data) == false)
 			return ResponseUtils.successReturnString(Response.Status.OK,
-					"O formato data est· incorreto - formato: dd/MM/yyyy");
+					"O formato data est√° incorreto - formato: dd/MM/yyyy");
 
 		return null;
 	}
 
 	public static Response validateDev(String desenvolvedor) {
 		if (desenvolvedor.isEmpty() || desenvolvedor == null)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo desenvolvedor È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo desenvolvedor √© obrigat√°rio");
 
 		if (desenvolvedor.length() > 45)
 			return ResponseUtils.successReturnString(Response.Status.OK,
-					"O campo desenvolvedor sÛ pode ter no m·ximo 45 caracteres");
+					"O campo desenvolvedor s√≥ pode ter no m√°ximo 45 caracteres");
 
 		return null;
 	}
 
 	public static Response validateDescription(String description) {
 		if (description.isEmpty() || description == null)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo descriÁ„o È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo descri√ß√£o √© obrigat√°rio");
 
 		if (description.length() > 500)
 			return ResponseUtils.successReturnString(Response.Status.OK,
-					"O campo descriÁ„o sÛ pode ter no m·ximo 500 caracteres");
+					"O campo descric√£o s√≥ pode ter no m√°ximo 500 caracteres");
 
 		return null;
 	}
 
 	public static Response validateCategory(Integer categoria) {
 		if (categoria == null)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo categoria È obrigatÛrio");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo categoria √© obrigat√°rio");
 
 		try {
 			if (DaoCategory.findById(categoria) == null)
-				return ResponseUtils.successReturnString(Response.Status.OK, "A categoria fornecida n„o existe");
+				return ResponseUtils.successReturnString(Response.Status.OK, "A categoria fornecida n√£o existe");
 
 			return null;
 		} catch (SQLException e) {
@@ -113,7 +113,7 @@ public class GameValidator {
 			Game gameByName = DaoGame.findByName(nome);
 			if (gameByName != null)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"J· existe um jogo com esse nome");
+						"J√° existe um jogo com esse nome");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Erro: " + e.getMessage());
@@ -131,7 +131,7 @@ public class GameValidator {
 			if (gameByName != null) {
 				if (!id.equals(gameByName.getId()))
 					return ResponseUtils.successReturnString(Response.Status.OK,
-							"J· existe um jogo com esse nome");
+							"J√° existe um jogo com esse nome");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
