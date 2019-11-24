@@ -21,4 +21,11 @@ public class LoginDTO {
 		this.senha = senha;
 	}
 
+	@Override
+	public String toString() {
+		return "LoginDTO [user=" + user + ", senha=" + senha + ", getUser()=" + getUser() + ", getSenha()=" + getSenha()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
+	}
+
 }

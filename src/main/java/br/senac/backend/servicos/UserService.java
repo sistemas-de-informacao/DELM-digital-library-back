@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.dto.LoginDTO;
+import br.senac.backend.dto.UpdatePasswordDTO;
 import br.senac.backend.models.User;
 import br.senac.backend.validators.UserValidator;
 
@@ -93,11 +94,23 @@ public class UserService {
 	@Path(value = "/login")
 	public Response loginAccount(LoginDTO login) {
 		try {
-			User usuario = DaoUser.findByNickname(login.getUser());
-			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname())) {
+			User usuario = new User();
+	
+			if (login.getUser().contains("@")) {
+				usuario = DaoUser.findByEmail(login.getUser());
+				if (usuario == null)
+					return ResponseUtils.successReturnString(Response.Status.OK,
+							"Usuario não existe em nossa base de dados. Verifique os dados inseridos.");
+			} else {
+				usuario = DaoUser.findByNickname(login.getUser());
+			}
+
+			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname()) 
+					|| login.getUser().trim().equalsIgnoreCase(usuario.getEmail())) {
 				if (login.getSenha().trim().equalsIgnoreCase(usuario.getSenha())) {
-					if (usuario.getEnable().equals(false)) 
+					if (usuario.getEnable().equals(false))
 						return ResponseUtils.successReturnString(Response.Status.OK, "Conta desativada");
+
 					return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário logado com sucesso.", usuario);
 				} else {
 					return ResponseUtils.successReturnString(Response.Status.OK,
@@ -133,7 +146,7 @@ public class UserService {
 
 		return null;
 	}
-	
+
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -141,16 +154,16 @@ public class UserService {
 	public Response getAllByNome(@PathParam("nickname") String nickname) {
 		try {
 			if (DaoUser.findAllByNickname(nickname) != null)
-				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuários encontrados com sucesso", DaoUser.findAllByNickname(nickname));
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuários encontrados com sucesso",
+						DaoUser.findAllByNickname(nickname));
 		} catch (Exception e) {
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
 					"Erro ao pesquisar usuário: " + e.getMessage());
 		}
 
-		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
-				"Usuário não encontrado" );
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Usuário não encontrado");
 	}
-	
+
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -158,14 +171,34 @@ public class UserService {
 	public Response ativar(@PathParam("nickname") String nickname) {
 		try {
 			if (DaoUser.ativar(nickname) != null)
-				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário ativado com sucesso", DaoUser.ativar(nickname));
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Usuário ativado com sucesso",
+						DaoUser.ativar(nickname));
 		} catch (Exception e) {
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
 					"Erro ao ativar usuário: " + e.getMessage());
 		}
 
-		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
-				"Não foi possível ativar usuário" );
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Não foi possível ativar usuário");
+	}
+
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "trocar-senha/{id}")
+	public Response updatePassword(@PathParam("id") Integer id, UpdatePasswordDTO senhas) {
+		try {
+			if (UserValidator.passwordsIsEquals(senhas) != null)
+				return UserValidator.passwordsIsEquals(senhas);
+
+			if (DaoUser.updatePassword(senhas, id) != null)
+				return DaoUser.updatePassword(senhas, id);
+
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao alterar senha do usuário: " + e.getMessage());
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.OK, "Senha alterada com sucesso");
 	}
 
 }

@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 import br.senac.backend.db.utils.ConnectionUtils;
+import br.senac.backend.db.utils.ResponseUtils;
+import br.senac.backend.dto.UpdatePasswordDTO;
 import br.senac.backend.models.Permissoes;
 import br.senac.backend.models.User;
 
@@ -220,7 +224,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				user.setTipo(Permissoes.getPermissao(result.getInt("ENABLE_USUARIO")));
+				user.setTipo(Permissoes.getPermissao(result.getInt("TIPO_CONTA_USUARIO")));
 				
 				return user;
 			}
@@ -368,6 +372,48 @@ public class DaoUser {
 				connection.close();
 			}
 		}		
+	}
+	
+	public static Response updatePassword(UpdatePasswordDTO senhas, Integer id) throws SQLException, Exception {
+		String sql = "UPDATE tb_usuario SET SENHA_USUARIO=? "
+				+ "WHERE (ID_USUARIO=?)";
+
+		if (DaoUser.findById(id) == null)
+			return ResponseUtils.successReturnString(Response.Status.OK, "Usuário não encontrado");
+		
+		User usuario = DaoUser.findById(id);
+		
+		if (!usuario.getSenha().equals(senhas.getSenhaAntiga()))
+			return ResponseUtils.successReturnString(Response.Status.OK, "A senha antiga está incorreta");
+			
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, senhas.getSenhaNova());
+			preparedStatement.setInt(2, id);
+			preparedStatement.executeUpdate();
+			
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}	
 	}
 	
 }

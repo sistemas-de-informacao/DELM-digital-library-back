@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.db.utils.DateUtils;
 import br.senac.backend.db.utils.ResponseUtils;
+import br.senac.backend.dto.UpdatePasswordDTO;
 import br.senac.backend.models.User;
 
 public class UserValidator {
@@ -40,7 +41,7 @@ public class UserValidator {
 
 	public static Response validateNickname(String nickname) {
 		if (nickname.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nickname é obrigatário");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nickname é obrigatório");
 
 		if (!nickname.isEmpty()) {
 			if (nickname.length() < 5)
@@ -57,7 +58,7 @@ public class UserValidator {
 
 	public static Response validateName(String nome) {
 		if (nome.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome é obrigatário");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo nome é obrigatório");
 
 		if (!nome.isEmpty()) {
 			if (nome.length() > 120)
@@ -70,7 +71,7 @@ public class UserValidator {
 
 	public static Response validateEmail(String email) {
 		if (email.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo e-mail é obrigatário");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo e-mail é obrigatório");
 
 		if (!email.isEmpty()) {
 			if (!email.contains("@"))
@@ -78,7 +79,7 @@ public class UserValidator {
 
 			if (email.length() > 150)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"O campo e-mail só pode ter no máximo 150 caracteres");
+						"O campo e-mail sÃ³ pode ter no máximo 150 caracteres");
 		}
 
 		return null;
@@ -86,12 +87,12 @@ public class UserValidator {
 
 	public static Response validatePassword(String senha) {
 		if (senha.isEmpty())
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo senha é obrigatário");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo senha é obrigatório");
 
 		if (!senha.isEmpty()) {
 			if (senha.length() < 6)
 				return ResponseUtils.successReturnString(Response.Status.OK,
-						"O campo senha precisar ter no mánimo 6 caracteres");
+						"O campo senha precisar ter no mínimo 6 caracteres");
 
 			if (senha.length() > 70)
 				return ResponseUtils.successReturnString(Response.Status.OK,
@@ -113,11 +114,11 @@ public class UserValidator {
 
 	public static Response validateDate(String data) {
 		if (data.isEmpty() || data == null)
-			return ResponseUtils.successReturnString(Response.Status.OK, "O campo data é obrigatário");
+			return ResponseUtils.successReturnString(Response.Status.OK, "O campo data é obrigatório");
 
 		if (DateUtils.isValidDate(data) == false)
 			return ResponseUtils.successReturnString(Response.Status.OK,
-					"O formato data está incorreto - formato: dd/MM/YYYY");
+					"O formato da data está incorreto - formato: dd/MM/YYYY");
 
 		return null;
 	}
@@ -126,13 +127,11 @@ public class UserValidator {
 		try {
 			User userByNickname = DaoUser.findByNickname(nickname);
 			if (userByNickname != null)
-				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse nickname");
+				return ResponseUtils.successReturnString(Response.Status.OK, "Já existe um usuário com esse nickname");
 
 			User userByEmail = DaoUser.findByEmail(email);
 			if (userByEmail != null)
-				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse e-mail");
+				return ResponseUtils.successReturnString(Response.Status.OK, "Já existe um usuário com esse e-mail");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Erro: " + e.getMessage());
@@ -149,15 +148,15 @@ public class UserValidator {
 			User userByNickname = DaoUser.findByNickname(nickname);
 			if (userByNickname != null) {
 				if (!id.equals(userByNickname.getId()))
-				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse nickname");
+					return ResponseUtils.successReturnString(Response.Status.OK,
+							"Já existe um usuário com esse nickname");
 			}
 
 			User userByEmail = DaoUser.findByEmail(email);
 			if (userByEmail != null) {
-				if (!id.equals(userByEmail.getId())) 
-				return ResponseUtils.successReturnString(Response.Status.OK,
-						"Já existe um usuário com esse e-mail");
+				if (!id.equals(userByEmail.getId()))
+					return ResponseUtils.successReturnString(Response.Status.OK,
+							"Já existe um usuário com esse e-mail");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -165,6 +164,15 @@ public class UserValidator {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Erro: " + e.getMessage());
+		}
+
+		return null;
+	}
+
+	public static Response passwordsIsEquals(UpdatePasswordDTO senhas) {
+		if (!senhas.getSenhaNova().equals(senhas.getSenhaNovaConfirmar())) {
+			return ResponseUtils.successReturnString(Response.Status.OK,
+					"As senhas não coincidem, elas precisam ser iguais");
 		}
 
 		return null;

@@ -9,7 +9,6 @@ import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.models.Category;
-import br.senac.backend.models.Game;
 
 public class DaoCategory {
 
