@@ -39,6 +39,8 @@ public class Historic {
 		this.idUsuario = idUsuario;
 	}
 	
+
+	
 	
 	
 	
