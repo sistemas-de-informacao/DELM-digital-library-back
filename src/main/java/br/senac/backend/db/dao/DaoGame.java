@@ -72,6 +72,38 @@ public class DaoGame {
 		}
 	}
 
+	public static void updateByName(Game game) throws SQLException, Exception {
+		String sql = "UPDATE tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO_JOGO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
+				+ " , FULL_PATH=?"
+				+ " WHERE (NOME_JOGO=?)";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+
+			preparedStatement.setString(1, game.getNome());
+			preparedStatement.setDouble(2, game.getPreco());
+			preparedStatement.setString(3, game.getDataLancamento());
+			preparedStatement.setString(4, game.getDesenvolvedor());
+			preparedStatement.setString(5, game.getDescricao());
+			preparedStatement.setInt(6, game.getIdCategoria());
+			preparedStatement.setString(7, game.getFullPath());
+			preparedStatement.setString(8, game.getNome());
+
+			preparedStatement.execute();
+		} finally {
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+	}
+	
 	public static void delete(Integer id) throws SQLException, Exception {
 		String sql = "delete from tb_jogo WHERE (ID_JOGO=?)";
 		Connection connection = null;

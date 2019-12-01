@@ -67,6 +67,20 @@ public class GameService {
 					"Erro ao atualizar jogo: " + e.getMessage());
 		}
 	}
+	
+	@PUT
+	@Path(value = "/image")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateGameByName(Game game) {
+		try {
+			System.out.println(game.getFullPath());
+			DaoGame.updateByName(game);
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Jogo atualizado com sucesso", game);
+		} catch (Exception e) {
+			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
+					"Erro ao atualizar jogo: " + e.getMessage());
+		}
+	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)

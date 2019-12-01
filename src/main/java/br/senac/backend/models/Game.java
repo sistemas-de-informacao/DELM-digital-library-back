@@ -9,6 +9,7 @@ public class Game {
 	private String desenvolvedor;
 	private String descricao;
 	private Integer idCategoria;
+	private String fullPath;
 
 	public Integer getId() {
 		return id;
@@ -64,6 +65,14 @@ public class Game {
 
 	public void setDataLancamento(String dataLancamento) {
 		this.dataLancamento = dataLancamento;
+	}
+	
+	public String getFullPath() {
+		return fullPath;
+	}
+
+	public void setFullPath(String fullPath) {
+		this.fullPath = fullPath;
 	}
 
 	@Override
