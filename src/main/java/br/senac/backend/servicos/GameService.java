@@ -31,7 +31,8 @@ public class GameService {
 			if (GameValidator.gameExists(game.getNome()) != null)
 				return GameValidator.gameExists(game.getNome());
 
-			DaoGame.insert(game);
+			Integer id = DaoGame.insert(game);
+			game.setId(id);
 			return ResponseUtils.successReturnBody(Response.Status.OK, "Jogo cadastrado com sucesso", game);
 		} catch (Exception e) {
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,

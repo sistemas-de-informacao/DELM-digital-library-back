@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import br.senac.backend.models.Game;
 
 public class DaoGame {
 
-	public static void insert(Game game) throws SQLException, Exception {
+	public static Integer insert(Game game) throws SQLException, Exception {
 		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -22,7 +23,8 @@ public class DaoGame {
 		try {
 			connection = ConnectionUtils.getConnection();
 
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
 
 			preparedStatement.setString(1, game.getNome());
 			preparedStatement.setDouble(2, game.getPreco());
@@ -31,6 +33,13 @@ public class DaoGame {
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.execute();
+			
+			int candidateId = 0;
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if(rs.next())
+			  return candidateId = rs.getInt(1);
+			
+			return null;
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();
