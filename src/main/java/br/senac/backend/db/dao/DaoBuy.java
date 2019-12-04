@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.models.Cart;
+import br.senac.backend.models.Game;
 import br.senac.backend.servicos.BuyService;
 
 public class DaoBuy {
@@ -33,6 +34,31 @@ public class DaoBuy {
 				return rs.getInt(1);
 
 			return null;
+		} finally {
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+	}
+	
+	public static void insertJogoComprado(Integer id, Game jogo) throws SQLException, Exception {
+		String sql = "INSERT INTO tb_jogo_compra (ID_TB_JOGO, PRECO_JOGO, ID_TB_COMPRA)"
+				+ " VALUES (?,?,?)";
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = ConnectionUtils.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, jogo.getId());
+			preparedStatement.setDouble(2, jogo.getPreco());
+			preparedStatement.setDouble(3, id);
+
+			preparedStatement.execute();
 		} finally {
 			if (preparedStatement != null && !preparedStatement.isClosed()) {
 				preparedStatement.close();
