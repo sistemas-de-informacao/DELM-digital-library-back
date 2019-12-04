@@ -25,7 +25,7 @@ public class BuyService {
 						"Compra falhou, usuário não possui saldo suficiente");
 
 			Integer id = DaoBuy.insert(cart);
-			criarTabelaCompraJogo(id);
+			criarTabelaCompraJogo(id, cart);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,8 +42,20 @@ public class BuyService {
 		return grn.nextInt(100000) + 1;
 	}
 
-	public boolean criarTabelaCompraJogo(Integer id) {
+	public boolean criarTabelaCompraJogo(Integer id, Cart cart) {
 		if (id != null) {
+			cart.getJogos().stream().forEach((jogo) -> {
+				try {
+					DaoBuy.insertJogoComprado(id, jogo);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+
 			return true;
 		}
 
