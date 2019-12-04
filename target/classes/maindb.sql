@@ -51,7 +51,7 @@ CREATE TABLE `tb_biblioteca` (
   `ID_TB_JOGO` int(11) not null,
   `ID_TB_USUARIO` int(11) NOT NULL,
   FOREIGN KEY (`ID_TB_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
-  FOREIGN KEY (`ID_TB_USUARIO`) REFERENCES `tb_usuario`(`ID_TB_USUARIO`)
+  FOREIGN KEY (`ID_TB_USUARIO`) REFERENCES `tb_usuario` (`ID_USUARIO`)
 );
 
 

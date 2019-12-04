@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoBuy;
+import br.senac.backend.db.dao.DaoUser;
 import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Cart;
 
@@ -47,6 +48,7 @@ public class BuyService {
 			cart.getJogos().stream().forEach((jogo) -> {
 				try {
 					DaoBuy.insertJogoComprado(id, jogo);
+					DaoUser.insertJogoBiblioteca(jogo.getId(), cart.getComprador().getId());
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -196,7 +196,7 @@ public class DaoUser {
 				connection.close();
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -225,7 +225,7 @@ public class DaoUser {
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
 				user.setTipo(Permissoes.getPermissao(result.getInt("TIPO_CONTA_USUARIO")));
-				
+
 				return user;
 			}
 		} finally {
@@ -290,7 +290,7 @@ public class DaoUser {
 
 		return user;
 	}
-	
+
 	public static List<User> findAllByNickname(String nickname) throws SQLException, Exception {
 		String sql = "SELECT * FROM tb_usuario where NICK_USUARIO LIKE ? and ENABLE_USUARIO = 1";
 
@@ -342,8 +342,7 @@ public class DaoUser {
 	}
 
 	public static String ativar(String nickname) throws SQLException, Exception {
-		String sql = "UPDATE tb_usuario SET ENABLE_USUARIO=1 "
-				+ "WHERE (NICK_USUARIO=?)";
+		String sql = "UPDATE tb_usuario SET ENABLE_USUARIO=1 " + "WHERE (NICK_USUARIO=?)";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -354,7 +353,7 @@ public class DaoUser {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, nickname);
 			preparedStatement.executeUpdate();
-			
+
 			return nickname;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -371,21 +370,20 @@ public class DaoUser {
 			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
-		}		
+		}
 	}
-	
+
 	public static Response updatePassword(UpdatePasswordDTO senhas, Integer id) throws SQLException, Exception {
-		String sql = "UPDATE tb_usuario SET SENHA_USUARIO=? "
-				+ "WHERE (ID_USUARIO=?)";
+		String sql = "UPDATE tb_usuario SET SENHA_USUARIO=? " + "WHERE (ID_USUARIO=?)";
 
 		if (DaoUser.findById(id) == null)
 			return ResponseUtils.successReturnString(Response.Status.OK, "Usuário não encontrado");
-		
+
 		User usuario = DaoUser.findById(id);
-		
+
 		if (!usuario.getSenha().equals(senhas.getSenhaAntiga()))
 			return ResponseUtils.successReturnString(Response.Status.OK, "A senha antiga está incorreta");
-			
+
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -396,7 +394,7 @@ public class DaoUser {
 			preparedStatement.setString(1, senhas.getSenhaNova());
 			preparedStatement.setInt(2, id);
 			preparedStatement.executeUpdate();
-			
+
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -413,7 +411,30 @@ public class DaoUser {
 			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
-		}	
+		}
+	}
+
+	public static void insertJogoBiblioteca(Integer jogo, Integer usuario) throws SQLException, Exception {
+		String sql = "INSERT INTO tb_biblioteca (ID_TB_JOGO, ID_TB_USUARIO)" + " VALUES (?,?)";
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = ConnectionUtils.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, jogo);
+			preparedStatement.setDouble(2, usuario);
+
+			preparedStatement.execute();
+		} finally {
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 	
 }
