@@ -232,7 +232,6 @@ public class DaoGame {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, "%" + nome + "%");
 			result = preparedStatement.executeQuery();
-			System.out.println(result);
 			if (result != null && result.next()) {
 				if (listaGames == null) {
 					listaGames = new ArrayList<Game>();

@@ -1,5 +1,6 @@
 package br.senac.backend.servicos;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoGame;
+import br.senac.backend.db.dao.DaoLibrary;
 import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Game;
 import br.senac.backend.validators.GameValidator;
@@ -42,9 +44,15 @@ public class GameService {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Game> listGames() {
+	@Path(value = "/delm/{user}")
+	public List<Game> listGames(@PathParam(value = "user") Integer id) {
 		try {
-			return DaoGame.list();
+			System.out.println(id);
+			if (id < 0) {
+				return DaoGame.list();
+			} else {
+				return DaoLibrary.findAllByUsuario(id);
+			}
 		} catch (Exception e) {
 			System.out.println("Erro identificado em 'listGame': " + e.getMessage());
 		}
@@ -68,7 +76,7 @@ public class GameService {
 					"Erro ao atualizar jogo: " + e.getMessage());
 		}
 	}
-	
+
 	@PUT
 	@Path(value = "/image")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -121,14 +129,32 @@ public class GameService {
 	public Response getAllByNome(@PathParam("nome") String nome) {
 		try {
 			if (DaoGame.findAllByName(nome) != null)
-				return ResponseUtils.successReturnBody(Response.Status.OK, "Jogos encontrados com sucesso", DaoGame.findAllByName(nome));
+				return ResponseUtils.successReturnBody(Response.Status.OK, "Jogos encontrados com sucesso",
+						DaoGame.findAllByName(nome));
 		} catch (Exception e) {
 			return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
 					"Erro ao pesquisar jogo: " + e.getMessage());
 		}
 
-		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST,
-				"Jogo não encontrado" );
+		return ResponseUtils.successReturnString(Response.Status.BAD_REQUEST, "Jogo não encontrado");
+	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "has-jogo/{game}/{usuario}")
+	public boolean hasJogo(@PathParam("game") Integer game, @PathParam("usuario") Integer usuario) {
+		try {
+			return DaoLibrary.findByUsuarioAndJogo(game, usuario);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 }

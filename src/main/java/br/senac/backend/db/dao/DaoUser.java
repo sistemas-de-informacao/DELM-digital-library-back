@@ -413,28 +413,5 @@ public class DaoUser {
 			}
 		}
 	}
-
-	public static void insertJogoBiblioteca(Integer jogo, Integer usuario) throws SQLException, Exception {
-		String sql = "INSERT INTO tb_biblioteca (ID_TB_JOGO, ID_TB_USUARIO)" + " VALUES (?,?)";
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-
-		try {
-			connection = ConnectionUtils.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, jogo);
-			preparedStatement.setDouble(2, usuario);
-
-			preparedStatement.execute();
-		} finally {
-			if (preparedStatement != null && !preparedStatement.isClosed()) {
-				preparedStatement.close();
-			}
-
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		}
-	}
 	
 }
