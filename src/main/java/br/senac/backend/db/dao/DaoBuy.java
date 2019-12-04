@@ -44,10 +44,9 @@ public class DaoBuy {
 			}
 		}
 	}
-	
+
 	public static void insertJogoComprado(Integer id, Game jogo) throws SQLException, Exception {
-		String sql = "INSERT INTO tb_jogo_compra (ID_TB_JOGO, PRECO_JOGO, ID_TB_COMPRA)"
-				+ " VALUES (?,?,?)";
+		String sql = "INSERT INTO tb_jogo_compra (ID_TB_JOGO, ID_TB_COMPRA, PRECO_JOGO)" + " VALUES (?,?,?)";
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -55,8 +54,8 @@ public class DaoBuy {
 			connection = ConnectionUtils.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, jogo.getId());
-			preparedStatement.setDouble(2, jogo.getPreco());
-			preparedStatement.setDouble(3, id);
+			preparedStatement.setDouble(2, id);
+			preparedStatement.setDouble(3, jogo.getPreco());
 
 			preparedStatement.execute();
 		} finally {

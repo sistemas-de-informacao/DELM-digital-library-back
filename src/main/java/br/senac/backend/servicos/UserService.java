@@ -207,7 +207,7 @@ public class UserService {
 			User comprador = new User();
 			comprador = DaoUser.findById(id);
 
-			if (comprador.getSaldo() > totalCompra) {
+			if (comprador.getSaldo() >= totalCompra) {
 				comprador.setSaldo(comprador.getSaldo() - totalCompra);
 				DaoUser.atualizar(comprador);
 				return true;
