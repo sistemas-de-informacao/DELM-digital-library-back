@@ -1,3 +1,4 @@
+drop database delm_digital_db;
 create database delm_digital_db;
 use delm_digital_db;
 CREATE TABLE `tb_usuario` (
@@ -40,13 +41,17 @@ CREATE TABLE `tb_compra` (
   KEY `ID_TB_USUARIO` (`ID_TB_USUARIO`)
 );
 CREATE TABLE `tb_jogo_compra` (
-  `ID_TB_JOGO_COMPRA` int(11) NOT NULL AUTO_INCREMENT,
   `ID_TB_JOGO` int(11) not null,
   `ID_TB_COMPRA` int(11) not null,
   `PRECO_JOGO` double NOT NULL,
-  PRIMARY KEY (`ID_TB_JOGO_COMPRA`),
-  CONSTRAINT FOREIGN KEY (`ID_TB_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
-  CONSTRAINT FOREIGN KEY (`ID_TB_COMPRA`) REFERENCES `tb_compra` (`id_tb_compra`)
+  FOREIGN KEY (`ID_TB_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
+  FOREIGN KEY (`ID_TB_COMPRA`) REFERENCES `TB_COMPRA` (`id_tb_compra`)
+);
+CREATE TABLE `tb_biblioteca` (
+  `ID_TB_JOGO` int(11) not null,
+  `ID_TB_USUARIO` int(11) NOT NULL,
+  FOREIGN KEY (`ID_TB_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
+  FOREIGN KEY (`ID_TB_USUARIO`) REFERENCES `tb_usuario`(`ID_TB_USUARIO`)
 );
 
 
