@@ -46,7 +46,7 @@ CREATE TABLE `tb_jogo_compra` (
   `ID_TB_COMPRA` int(11) not null,
   `PRECO_JOGO` double NOT NULL,
   PRIMARY KEY (`ID_TB_JOGO_COMPRA`),
-  FOREIGN KEY (`ID_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
+  FOREIGN KEY (`ID_TB_JOGO`) REFERENCES `tb_jogo` (`ID_JOGO`),
   FOREIGN KEY (`ID_TB_COMPRA`) REFERENCES `ID_TB_COMPRA` (`tb_compra`)
 );
 
