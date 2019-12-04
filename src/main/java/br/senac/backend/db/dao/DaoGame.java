@@ -34,10 +34,9 @@ public class DaoGame {
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.execute();
 			
-			int candidateId = 0;
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 			if(rs.next())
-			  return candidateId = rs.getInt(1);
+			  return rs.getInt(1);
 			
 			return null;
 		} finally {

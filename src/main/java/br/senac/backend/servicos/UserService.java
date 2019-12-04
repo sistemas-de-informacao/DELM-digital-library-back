@@ -1,5 +1,6 @@
 package br.senac.backend.servicos;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -95,7 +96,7 @@ public class UserService {
 	public Response loginAccount(LoginDTO login) {
 		try {
 			User usuario = new User();
-	
+
 			if (login.getUser().contains("@")) {
 				usuario = DaoUser.findByEmail(login.getUser());
 				if (usuario == null)
@@ -105,7 +106,7 @@ public class UserService {
 				usuario = DaoUser.findByNickname(login.getUser());
 			}
 
-			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname()) 
+			if (login.getUser().trim().equalsIgnoreCase(usuario.getNickname())
 					|| login.getUser().trim().equalsIgnoreCase(usuario.getEmail())) {
 				if (login.getSenha().trim().equalsIgnoreCase(usuario.getSenha())) {
 					if (usuario.getEnable().equals(false))
@@ -199,6 +200,27 @@ public class UserService {
 		}
 
 		return ResponseUtils.successReturnString(Response.Status.OK, "Senha alterada com sucesso");
+	}
+
+	public static boolean isDinheiroSuficiente(Integer id, Double totalCompra) {
+		try {
+			User comprador = new User();
+			comprador = DaoUser.findById(id);
+
+			if (comprador.getSaldo() > totalCompra) {
+				comprador.setSaldo(comprador.getSaldo() - totalCompra);
+				DaoUser.atualizar(comprador);
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 }
