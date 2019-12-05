@@ -329,6 +329,7 @@ public class DaoGame {
 			preparedStatement.setInt(1, id);
 
 			result = preparedStatement.executeQuery();
+			System.out.println("Entrei");
 			if (result != null && result.next()) {
 				game.setId(result.getInt("ID_JOGO"));
 				game.setNome(result.getString("NOME_JOGO"));
@@ -340,21 +341,8 @@ public class DaoGame {
 			}
 		} catch (Exception e) {
 			System.out.println("Deu ruim pegar o game: " + e);
-		} finally {
-
-			if (result != null && !result.isClosed()) {
-				result.close();
-			}
-
-			if (preparedStatement != null && !preparedStatement.isClosed()) {
-				preparedStatement.close();
-			}
-
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
 		}
-
+		
 		return game;
 	}
 

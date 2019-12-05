@@ -36,7 +36,10 @@ public class DaoLibrary {
 	}
 
 	public static List<Game> findAllByUsuario(Integer id) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_biblioteca where id_tb_usuario = ?";
+		String sql = "SELECT * " + 
+				"FROM tb_jogo " + 
+				"INNER JOIN tb_biblioteca " + 
+				"ON tb_jogo.ID_JOGO = tb_biblioteca.ID_TB_JOGO where tb_biblioteca.ID_TB_USUARIO = ?";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -49,12 +52,24 @@ public class DaoLibrary {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			result = preparedStatement.executeQuery();
-			if (result != null && result.next()) {
+			
+			while (result != null && result.next()) {
 				if (listaGames == null) {
 					listaGames = new ArrayList<Game>();
 				}
 
-				listaGames.add(DaoGame.findById(result.getInt("ID_TB_JOGO")));
+				Game game = new Game();
+
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+
+				System.out.println("entrei");
+				listaGames.add(game);
 			}
 		} finally {
 			if (result != null && !result.isClosed()) {
