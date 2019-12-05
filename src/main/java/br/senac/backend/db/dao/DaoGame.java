@@ -14,8 +14,8 @@ import br.senac.backend.models.Game;
 public class DaoGame {
 
 	public static Integer insert(Game game) throws SQLException, Exception {
-		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA) "
-				+ " VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tb_jogo (NOME_JOGO, PRECO_JOGO, DATA_LANCAMENTO_JOGO, DESENVOLVEDOR_JOGO, DESCRICAO_JOGO, ID_TB_CATEGORIA, ENABLED) "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -32,6 +32,7 @@ public class DaoGame {
 			preparedStatement.setString(4, game.getDesenvolvedor());
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
+			preparedStatement.setString(7, "1");
 			preparedStatement.execute();
 			
 			ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -113,7 +114,8 @@ public class DaoGame {
 	}
 	
 	public static void delete(Integer id) throws SQLException, Exception {
-		String sql = "delete from tb_jogo WHERE (ID_JOGO=?)";
+		String sql = "UPDATE tb_jogo SET ENABLED = '0' WHERE (`ID_JOGO` = ?)";
+				
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -134,7 +136,7 @@ public class DaoGame {
 	}
 
 	public static List<Game> list() throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo";
+		String sql = "SELECT * FROM tb_jogo WHERE ENABLED = '1'";
 		List<Game> listaGames = null;
 
 		Connection connection = null;
@@ -178,7 +180,7 @@ public class DaoGame {
 	}
 
 	public static Game findByName(String nome) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ?";
+		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ? AND ENABLED = '1'";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -219,7 +221,7 @@ public class DaoGame {
 	}
 
 	public static List<Game> findAllByName(String nome) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where NOME_JOGO LIKE ?";
+		String sql = "SELECT * FROM tb_jogo where NOME_JOGO LIKE ? AND ENABLED = '1'";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -267,7 +269,7 @@ public class DaoGame {
 	}
 
 	public static List<Game> findGamesByDesc(String descricao_jogo) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ?";
+		String sql = "SELECT * FROM tb_jogo where DESCRICAO_JOGO = ? AND ENABLED = '1'";
 
 		List<Game> listaGames = null;
 
@@ -315,7 +317,7 @@ public class DaoGame {
 	}
 
 	public static Game findById(Integer id) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ?";
+		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ? AND ENABLED = '1'";
 		Game game = new Game();
 
 		Connection connection = null;
