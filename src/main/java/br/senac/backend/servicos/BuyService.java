@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.util.Random;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,6 +29,24 @@ public class BuyService {
 
 			Integer id = DaoBuy.insert(cart);
 			criarTabelaCompraJogo(id, cart);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.OK, "Compra realizada com sucesso");
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path(value = "{id}")
+	public Response getHistoricoByUser(@PathParam(value = "id") Integer id) {
+		try {
+			System.out.println("entrei");
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Histórico de vendas gerado com sucesso", DaoBuy.getAllCodigosByUser(id));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
