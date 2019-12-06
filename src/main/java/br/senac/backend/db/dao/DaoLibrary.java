@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.senac.backend.db.utils.ConnectionUtils;
+import br.senac.backend.dto.CategoryCountGraph;
 import br.senac.backend.models.Game;
 
 public class DaoLibrary {
@@ -178,4 +179,52 @@ public class DaoLibrary {
 		return listaGames;
 	}
 	
+	public static List<CategoryCountGraph> countCategoriasJogosByUsuario(Integer id) throws SQLException, Exception {
+		String sql = "select distinct qtd.qtd, c.id_tb_usuario, cat.nome_categoria from tb_jogo_compra cg " + 
+				"inner join tb_jogo j on (cg.id_tb_jogo = j.id_jogo) " + 
+				"left join (select count(id_jogo) qtd, id_tb_categoria from tb_jogo " + 
+				"group by id_tb_categoria) qtd on (qtd.id_tb_categoria = j.id_tb_categoria) " + 
+				"inner join tb_compra c on (c.id_tb_compra = cg.id_tb_compra) " + 
+				"inner join tb_categoria cat on (cat.id_categoria = j.id_tb_categoria) where c.id_tb_usuario = ?";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		List<CategoryCountGraph> categoriesCountGraph = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			result = preparedStatement.executeQuery();
+			
+			while (result != null && result.next()) {
+				if (categoriesCountGraph == null) {
+					categoriesCountGraph = new ArrayList<CategoryCountGraph>();
+				}
+
+				CategoryCountGraph categoryCountGraph = new CategoryCountGraph();
+
+				categoryCountGraph.setCategory(result.getString("nome_categoria"));
+				categoryCountGraph.setQtd(result.getInt("qtd"));
+
+				categoriesCountGraph.add(categoryCountGraph);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return categoriesCountGraph;
+	}
 }

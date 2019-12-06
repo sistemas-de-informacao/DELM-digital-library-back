@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import br.senac.backend.db.utils.ConnectionUtils;
 import br.senac.backend.dto.HistoricForm;
