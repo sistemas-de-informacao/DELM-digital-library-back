@@ -10,6 +10,7 @@ public class Game {
 	private String descricao;
 	private Integer idCategoria;
 	private String fullPath;
+	private boolean enabled;
 
 	public Integer getId() {
 		return id;
@@ -73,6 +74,14 @@ public class Game {
 
 	public void setFullPath(String fullPath) {
 		this.fullPath = fullPath;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override

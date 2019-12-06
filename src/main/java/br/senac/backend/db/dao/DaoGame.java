@@ -32,7 +32,7 @@ public class DaoGame {
 			preparedStatement.setString(4, game.getDesenvolvedor());
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
-			preparedStatement.setString(7, "1");
+			preparedStatement.setBoolean(7, true);
 			preparedStatement.execute();
 			
 			ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -52,7 +52,8 @@ public class DaoGame {
 	}
 
 	public static void update(Game game) throws SQLException, Exception {
-		String sql = "UPDATE tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO_JOGO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
+		String sql = "UPDATE tb_jogo SET NOME_JOGO=?, PRECO_JOGO=?, DATA_LANCAMENTO_JOGO=?, "
+				+ "DESENVOLVEDOR_JOGO=?, DESCRICAO_JOGO=?, ID_TB_CATEGORIA=?, ENABLED=?"
 				+ " WHERE (ID_JOGO=?)";
 
 		Connection connection = null;
@@ -67,7 +68,8 @@ public class DaoGame {
 			preparedStatement.setString(4, game.getDesenvolvedor());
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
-			preparedStatement.setInt(7, game.getId());
+			preparedStatement.setBoolean(7, game.isEnabled());
+			preparedStatement.setInt(8, game.getId());
 
 			preparedStatement.execute();
 		} finally {
@@ -83,7 +85,7 @@ public class DaoGame {
 
 	public static void updateByName(Game game) throws SQLException, Exception {
 		String sql = "UPDATE tb_jogo SET NOME_JOGO=? , PRECO_JOGO=? , DATA_LANCAMENTO_JOGO=? , DESENVOLVEDOR_JOGO=? , DESCRICAO_JOGO=? , ID_TB_CATEGORIA=?"
-				+ " , FULL_PATH=?"
+				+ " , FULL_PATH=?, ENABLED=?"
 				+ " WHERE (NOME_JOGO=?)";
 
 		Connection connection = null;
@@ -99,7 +101,8 @@ public class DaoGame {
 			preparedStatement.setString(5, game.getDescricao());
 			preparedStatement.setInt(6, game.getIdCategoria());
 			preparedStatement.setString(7, game.getFullPath());
-			preparedStatement.setString(8, game.getNome());
+			preparedStatement.setBoolean(8, game.isEnabled());
+			preparedStatement.setString(9, game.getNome());
 
 			preparedStatement.execute();
 		} finally {
@@ -114,7 +117,7 @@ public class DaoGame {
 	}
 	
 	public static void delete(Integer id) throws SQLException, Exception {
-		String sql = "UPDATE tb_jogo SET ENABLED = 0 WHERE (`ID_JOGO` = ?)";
+		String sql = "UPDATE tb_jogo SET ENABLED = FALSE WHERE (`ID_JOGO` = ?)";
 				
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -179,8 +182,52 @@ public class DaoGame {
 		return listaGames;
 	}
 
+	public static List<Game> listAll() throws SQLException, Exception {
+		String sql = "SELECT * FROM tb_jogo";
+		List<Game> listaGames = null;
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			result = preparedStatement.executeQuery();
+			while (result.next()) {
+				if (listaGames == null) {
+					listaGames = new ArrayList<Game>();
+				}
+
+				Game game = new Game();
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+				listaGames.add(game);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return listaGames;
+	}
+	
 	public static Game findByName(String nome) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ? AND ENABLED = '1'";
+		String sql = "SELECT * FROM tb_jogo where NOME_JOGO = ?";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -317,7 +364,7 @@ public class DaoGame {
 	}
 
 	public static Game findById(Integer id) throws SQLException, Exception {
-		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ? AND ENABLED = '1'";
+		String sql = "SELECT * FROM tb_jogo where ID_JOGO = ?";
 		Game game = new Game();
 
 		Connection connection = null;
@@ -340,6 +387,8 @@ public class DaoGame {
 				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
 				game.setDescricao(result.getString("DESCRICAO_JOGO"));
 				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+				game.setEnabled(result.getBoolean("ENABLED"));
 			}
 		} catch (Exception e) {
 			System.out.println("Deu ruim pegar o game: " + e);
