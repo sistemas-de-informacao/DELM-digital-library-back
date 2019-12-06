@@ -48,10 +48,12 @@ public class GameService {
 	public List<Game> listGames(@PathParam(value = "user") Integer id) {
 		try {
 			System.out.println(id);
-			if (id < 0) {
+			if (id == -1) {
 				return DaoGame.list();
-			} else {
+			} else if (id >= 0 ) {
 				return DaoLibrary.findAllByUsuario(id);
+			} else if (id == -2) {
+				return DaoGame.listAll();
 			}
 		} catch (Exception e) {
 			System.out.println("Erro identificado em 'listGame': " + e.getMessage());
