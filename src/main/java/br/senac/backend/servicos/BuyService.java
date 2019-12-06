@@ -1,6 +1,7 @@
 package br.senac.backend.servicos;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Random;
 
 import javax.ws.rs.Consumes;
@@ -8,13 +9,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoBuy;
+import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoLibrary;
 import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Cart;
+import br.senac.backend.models.Game;
 
 @Path("/buy")
 public class BuyService {
@@ -82,6 +86,17 @@ public class BuyService {
 		}
 
 		return false;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Game> listGamesByHistoric(@PathParam(value = "user") Integer id) {
+		try {
+			return DaoLibrary.findAllByUser(id);
+		} catch (Exception e) {
+			System.out.println("Erro identificado em 'listGameByHistoric': " + e.getMessage());
+		}
+		return null;
 	}
 
 }

@@ -124,4 +124,58 @@ public class DaoLibrary {
 		return false;
 	}
 
+	
+	public static List<Game> findAllByUser(Integer id) throws SQLException, Exception {
+		String sql = "SELECT * " + 
+				"FROM tb_jogo " + 
+				"INNER JOIN tb_jogo_compra " + 
+				"ON tb_jogo.ID_JOGO = tb_jogo_compra.ID_TB_JOGO where tb_jogo_compra.ID_TB_USUARIO = ?";
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		List<Game> listaGames = null;
+		try {
+			connection = ConnectionUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			result = preparedStatement.executeQuery();
+			
+			while (result != null && result.next()) {
+				if (listaGames == null) {
+					listaGames = new ArrayList<Game>();
+				}
+
+				Game game = new Game();
+
+				game.setId(result.getInt("ID_JOGO"));
+				game.setNome(result.getString("NOME_JOGO"));
+				game.setPreco(result.getDouble("PRECO_JOGO"));
+				game.setDataLancamento(result.getString("DATA_LANCAMENTO_JOGO"));
+				game.setDesenvolvedor(result.getString("DESENVOLVEDOR_JOGO"));
+				game.setDescricao(result.getString("DESCRICAO_JOGO"));
+				game.setIdCategoria(result.getInt("ID_TB_CATEGORIA"));
+
+				System.out.println("entrei");
+				listaGames.add(game);
+			}
+		} finally {
+			if (result != null && !result.isClosed()) {
+				result.close();
+			}
+
+			if (preparedStatement != null && !preparedStatement.isClosed()) {
+				preparedStatement.close();
+			}
+
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
+
+		return listaGames;
+	}
+	
 }
