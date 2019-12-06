@@ -268,7 +268,7 @@ public class DaoUser {
 				user.setSaldo(result.getDouble("SALDO_USUARIO"));
 				user.setDataCriacao(result.getString("DATA_CRIACAO_USUARIO"));
 				user.setEnable(result.getBoolean("ENABLE_USUARIO"));
-				user.setTipo(Permissoes.getPermissao(result.getInt("ENABLE_USUARIO")));
+				user.setTipo(Permissoes.getPermissao(result.getInt("TIPO_CONTA_USUARIO")));
 			} else {
 				System.out.println("Deu ruim na hora de buscar o usuario pelo ID");
 			}

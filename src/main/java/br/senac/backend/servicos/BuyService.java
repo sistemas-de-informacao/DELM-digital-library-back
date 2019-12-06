@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.senac.backend.db.dao.DaoBuy;
-import br.senac.backend.db.dao.DaoGame;
 import br.senac.backend.db.dao.DaoLibrary;
 import br.senac.backend.db.utils.ResponseUtils;
 import br.senac.backend.models.Cart;
@@ -33,6 +32,42 @@ public class BuyService {
 
 			Integer id = DaoBuy.insert(cart);
 			criarTabelaCompraJogo(id, cart);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.OK, "Compra realizada com sucesso");
+	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path(value = "{id}")
+	public Response getHistoricoByUser(@PathParam(value = "id") Integer id) {
+		try {
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Histórico de vendas gerado com sucesso",
+					DaoBuy.getAllCodigosByUser(id));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ResponseUtils.successReturnString(Response.Status.OK, "Compra realizada com sucesso");
+	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path(value = "category/{id}")
+	public Response getCategoriasCountByUsuario(@PathParam(value = "id") Integer id) {
+		try {
+			return ResponseUtils.successReturnBody(Response.Status.OK, "Histórico de vendas gerado com sucesso",
+					DaoLibrary.countCategoriasJogosByUsuario(id));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,7 +104,7 @@ public class BuyService {
 
 		return false;
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Game> listGamesByHistoric(@PathParam(value = "user") Integer id) {
