@@ -114,7 +114,7 @@ public class DaoGame {
 	}
 	
 	public static void delete(Integer id) throws SQLException, Exception {
-		String sql = "UPDATE tb_jogo SET ENABLED = '0' WHERE (`ID_JOGO` = ?)";
+		String sql = "UPDATE tb_jogo SET ENABLED = 0 WHERE (`ID_JOGO` = ?)";
 				
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
